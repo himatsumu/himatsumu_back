@@ -6,62 +6,62 @@ import (
 
 // User ユーザーテーブル
 type User struct {
-	UserUUID   string    `gorm:"primaryKey;column:USER_UUID;type:CHAR(36);not null"`
-	UserID     string    `gorm:"column:USER_ID;type:VARCHAR(20);not null;uniqueIndex"`
-	UserName   string    `gorm:"column:USER_NAME;type:VARCHAR(20);not null"`
-	Password   string    `gorm:"column:PASSWORD;type:CHAR(36);not null"`
-	Gender     int       `gorm:"column:GENDER;type:INT;not null"`
-	Birthday   time.Time `gorm:"column:BIRTHDAY;type:DATE;not null"`
-	CreateAt   time.Time `gorm:"column:CREATE_AT;type:DATETIME;not null"`
-	Friends    []Friend  `gorm:"foreignKey:UserUUID1;references:UserUUID"`
+	UserUUID   string      `gorm:"primaryKey;column:USER_UUID;type:CHAR(36);not null"`
+	UserID     string      `gorm:"column:USER_ID;type:VARCHAR(20);not null;uniqueIndex"`
+	UserName   string      `gorm:"column:USER_NAME;type:VARCHAR(20);not null"`
+	Password   string      `gorm:"column:PASSWORD;type:CHAR(36);not null"`
+	Gender     int         `gorm:"column:GENDER;type:INT;not null"`
+	Birthday   time.Time   `gorm:"column:BIRTHDAY;type:DATE;not null"`
+	CreateAt   time.Time   `gorm:"column:CREATE_AT;type:timestamp;not null"`
+	Friends    []Friend    `gorm:"foreignKey:UserUUID1;references:UserUUID"`
 	FriendReqs []FriendReq `gorm:"foreignKey:UserUUID1;references:UserUUID"`
 }
 
 // Friend フレンドテーブル
 type Friend struct {
-	FriendUUID string    `gorm:"primaryKey;column:FRIEND_UUID;type:CHAR(36);not null"`
-	UserUUID1  string    `gorm:"column:USER_UUID1;type:CHAR(36);not null;uniqueIndex:idx_user_uuid_pair;foreignKey:UserUUID1;references:UserUUID"`
-	UserUUID2  string    `gorm:"column:USER_UUID2;type:CHAR(36);not null;uniqueIndex:idx_user_uuid_pair;foreignKey:UserUUID2;references:UserUUID"`
-	LastMeetAt time.Time `gorm:"column:LAST_MEET_AT;type:DATE;not null"`
-	CreateAt   time.Time `gorm:"column:CREATE_AT;type:DATETIME;not null"`
-	OwnChars   []OwnCharacter `gorm:"foreignKey:FriendUUID;references:FriendUUID"`
-	OwnCostumes []OwnCostume `gorm:"foreignKey:FriendUUID;references:FriendUUID"`
-	QuestHis   []QuestHistory `gorm:"foreignKey:FriendUUID;references:FriendUUID"`
-	MeetHis    []MeetHistory `gorm:"foreignKey:FriendUUID;references:FriendUUID"`
+	FriendUUID  string         `gorm:"primaryKey;column:FRIEND_UUID;type:CHAR(36);not null"`
+	UserUUID1   string         `gorm:"column:USER_UUID1;type:CHAR(36);not null;uniqueIndex:idx_user_uuid_pair;foreignKey:UserUUID1;references:UserUUID"`
+	UserUUID2   string         `gorm:"column:USER_UUID2;type:CHAR(36);not null;uniqueIndex:idx_user_uuid_pair;foreignKey:UserUUID2;references:UserUUID"`
+	LastMeetAt  time.Time      `gorm:"column:LAST_MEET_AT;type:DATE;not null"`
+	CreateAt    time.Time      `gorm:"column:CREATE_AT;type:timestamp;not null"`
+	OwnChars    []OwnCharacter `gorm:"foreignKey:FriendUUID;references:FriendUUID"`
+	OwnCostumes []OwnCostume   `gorm:"foreignKey:FriendUUID;references:FriendUUID"`
+	QuestHis    []QuestHistory `gorm:"foreignKey:FriendUUID;references:FriendUUID"`
+	MeetHis     []MeetHistory  `gorm:"foreignKey:FriendUUID;references:FriendUUID"`
 }
 
 // FriendReq フレンドリクエストテーブル
 type FriendReq struct {
-	FreReqUUID    string    `gorm:"primaryKey;column:FRE_REQ_UUID;type:CHAR(36);not null"`
-	UserUUID1     string    `gorm:"column:USER_UUID1;type:CHAR(36);not null;foreignKey:UserUUID1;references:UserUUID"`
-	UserUUID2     string    `gorm:"column:USER_UUID2;type:CHAR(36);not null;foreignKey:UserUUID2;references:UserUUID"`
-	ReqStatus     int       `gorm:"column:REQ_STATUS;type:INT;not null"`
-	ReqUpdateAt   time.Time `gorm:"column:REQ_UPDATE_AT;type:DATETIME;not null"`
-	ReqCreateAt   time.Time `gorm:"column:REQ_CREATE_AT;type:DATETIME;not null"`
+	FreReqUUID  string    `gorm:"primaryKey;column:FRE_REQ_UUID;type:CHAR(36);not null"`
+	UserUUID1   string    `gorm:"column:USER_UUID1;type:CHAR(36);not null;foreignKey:UserUUID1;references:UserUUID"`
+	UserUUID2   string    `gorm:"column:USER_UUID2;type:CHAR(36);not null;foreignKey:UserUUID2;references:UserUUID"`
+	ReqStatus   int       `gorm:"column:REQ_STATUS;type:INT;not null"`
+	ReqUpdateAt time.Time `gorm:"column:REQ_UPDATE_AT;type:timestamp;not null"`
+	ReqCreateAt time.Time `gorm:"column:REQ_CREATE_AT;type:timestamp;not null"`
 }
 
 // CharaType キャラクター種別テーブル
 type CharaType struct {
-	CharaType  int    `gorm:"primaryKey;column:CHARA_TYPE;type:INT;not null"`
-	TypeStage  int    `gorm:"column:TYPE_STAGE;type:INT;not null;uniqueIndex:idx_chara_type_stage"`
-	TypeName   string `gorm:"column:TYPE_NAME;type:VARCHAR(20);not null"`
-	ImageURL   string `gorm:"column:IMAGE_URL;type:VARCHAR(50);not null"`
+	CharaType  int         `gorm:"primaryKey;column:CHARA_TYPE;type:INT;not null"`
+	TypeStage  int         `gorm:"column:TYPE_STAGE;type:INT;not null;uniqueIndex:idx_chara_type_stage"`
+	TypeName   string      `gorm:"column:TYPE_NAME;type:VARCHAR(20);not null"`
+	ImageURL   string      `gorm:"column:IMAGE_URL;type:VARCHAR(50);not null"`
 	Characters []Character `gorm:"foreignKey:CharaType;references:CharaType"`
 }
 
 // Character キャラクターテーブル
 type Character struct {
-	CharaUUID  string    `gorm:"primaryKey;column:CHARA_UUID;type:CHAR(36);not null"`
-	CharaName  string    `gorm:"column:CHARA_NAME;type:VARCHAR(36);not null"`
-	CharaType  int       `gorm:"column:CHARA_TYPE;type:INT;not null"`
-	TypeStage  int       `gorm:"column:TYPE_STAGE;type:INT;not null"`
-	Exp        int       `gorm:"column:EXP;type:INT;not null;default:0"`
-	Birthday   *time.Time `gorm:"column:BARTHDAY;type:DATE"`
-	FirstEvo   *time.Time `gorm:"column:FIRST_EVO;type:DATE"`
-	SecondEvo  *time.Time `gorm:"column:SECOND_EVO;type:DATE"`
-	ThirdEvo   *time.Time `gorm:"column:THIRD_EVO;type:DATE"`
-	Point      int       `gorm:"column:POINT;type:INT;not null;default:0"`
-	CharaImage string    `gorm:"column:CHARA_IMAGE;type:VARCHAR(50)"`
+	CharaUUID  string         `gorm:"primaryKey;column:CHARA_UUID;type:CHAR(36);not null"`
+	CharaName  string         `gorm:"column:CHARA_NAME;type:VARCHAR(36);not null"`
+	CharaType  int            `gorm:"column:CHARA_TYPE;type:INT;not null"`
+	TypeStage  int            `gorm:"column:TYPE_STAGE;type:INT;not null"`
+	Exp        int            `gorm:"column:EXP;type:INT;not null;default:0"`
+	Birthday   *time.Time     `gorm:"column:BARTHDAY;type:DATE"`
+	FirstEvo   *time.Time     `gorm:"column:FIRST_EVO;type:DATE"`
+	SecondEvo  *time.Time     `gorm:"column:SECOND_EVO;type:DATE"`
+	ThirdEvo   *time.Time     `gorm:"column:THIRD_EVO;type:DATE"`
+	Point      int            `gorm:"column:POINT;type:INT;not null;default:0"`
+	CharaImage string         `gorm:"column:CHARA_IMAGE;type:VARCHAR(50)"`
 	OwnChars   []OwnCharacter `gorm:"foreignKey:CharaUUID;references:CharaUUID"`
 }
 
@@ -73,19 +73,19 @@ type OwnCharacter struct {
 
 // CosType 衣装種別テーブル
 type CosType struct {
-	CosType   int    `gorm:"primaryKey;column:COS_TYPE;type:INT;not null"`
-	TypeName  string `gorm:"column:TYPE_NAME;type:VARCHAR(30);not null"`
-	Costumes  []Costume `gorm:"foreignKey:CosType;references:CosType"`
+	CosType  int       `gorm:"primaryKey;column:COS_TYPE;type:INT;not null"`
+	TypeName string    `gorm:"column:TYPE_NAME;type:VARCHAR(30);not null"`
+	Costumes []Costume `gorm:"foreignKey:CosType;references:CosType"`
 }
 
 // Costume キャラクター衣装テーブル
 type Costume struct {
-	CosUUID   string    `gorm:"primaryKey;column:COS_UUID;type:CHAR(36);not null"`
-	CosName   string    `gorm:"column:COS_NAME;type:VARCHAR(20);not null"`
-	CosURL    string    `gorm:"column:COS_URL;type:VARCHAR(50);not null"`
-	Point     int       `gorm:"column:POINT;type:INT;not null;default:0"`
-	CosType   int       `gorm:"column:COS_TYPE;type:INT;not null"`
-	CreateAt  time.Time `gorm:"column:CREATE_AT;type:DATETIME;not null"`
+	CosUUID     string       `gorm:"primaryKey;column:COS_UUID;type:CHAR(36);not null"`
+	CosName     string       `gorm:"column:COS_NAME;type:VARCHAR(20);not null"`
+	CosURL      string       `gorm:"column:COS_URL;type:VARCHAR(50);not null"`
+	Point       int          `gorm:"column:POINT;type:INT;not null;default:0"`
+	CosType     int          `gorm:"column:COS_TYPE;type:INT;not null"`
+	CreateAt    time.Time    `gorm:"column:CREATE_AT;type:timestamp;not null"`
 	OwnCostumes []OwnCostume `gorm:"foreignKey:CosUUID;references:CosUUID"`
 }
 
@@ -103,7 +103,7 @@ type QuestHistory struct {
 	StoreLoca  string    `gorm:"column:STORE_LOCA;type:VARCHAR(50);not null"`
 	StoType    int       `gorm:"column:STO_TYPE;type:INT;not null"`
 	Possible   int       `gorm:"column:POSSIBLE;type:INT;not null;default:1"`
-	CreateAt   time.Time `gorm:"column:CREATE_AT;type:DATETIME;not null"`
+	CreateAt   time.Time `gorm:"column:CREATE_AT;type:timestamp;not null"`
 }
 
 // StoreType 店舗種別テーブル
@@ -114,16 +114,16 @@ type StoreType struct {
 
 // MeetHistory 遊んだ日履歴テーブル
 type MeetHistory struct {
-	MeetUUID  string    `gorm:"primaryKey;column:MEET_UUID;type:CHAR(36);not null"`
-	FriendUUID string   `gorm:"column:FRIEND_UUID;type:CHAR(36);not null"`
-	MeetAt    time.Time `gorm:"column:MEET_AT;type:DATE;not null"`
-	Pictures  []Picture `gorm:"foreignKey:MeetUUID;references:MeetUUID"`
+	MeetUUID   string    `gorm:"primaryKey;column:MEET_UUID;type:CHAR(36);not null"`
+	FriendUUID string    `gorm:"column:FRIEND_UUID;type:CHAR(36);not null"`
+	MeetAt     time.Time `gorm:"column:MEET_AT;type:DATE;not null"`
+	Pictures   []Picture `gorm:"foreignKey:MeetUUID;references:MeetUUID"`
 }
 
 // Picture 写真テーブル
 type Picture struct {
-	PicUUID   string    `gorm:"primaryKey;column:PIC_UUID;type:CHAR(36);not null"`
-	MeetUUID  string    `gorm:"column:MEET_UUID;type:CHAR(36);not null"`
-	PicURL    string    `gorm:"column:PIC_URL;type:VARCHAR(50);not null"`
-	CreateAt  time.Time `gorm:"column:CREATE_AT;type:DATETIME;not null"`
+	PicUUID  string    `gorm:"primaryKey;column:PIC_UUID;type:CHAR(36);not null"`
+	MeetUUID string    `gorm:"column:MEET_UUID;type:CHAR(36);not null"`
+	PicURL   string    `gorm:"column:PIC_URL;type:VARCHAR(50);not null"`
+	CreateAt time.Time `gorm:"column:CREATE_AT;type:timestamp;not null"`
 }

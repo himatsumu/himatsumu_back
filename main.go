@@ -1,17 +1,22 @@
 package main
 
 import (
-	"log"
+	"app/models"
 	"os"
 )
 
-
 func main() {
-	// 初期化
-	Init()
+	// モデル初期化
+	models.Init()
+	
+	// サーバー起動
+	mainServer()
+}
 
-	log.Println("サーバーを起動しています")
+func DebugModel() {
+}
 
+func mainServer() {
 	// サーバー初期化
 	server := InitServer()
 
