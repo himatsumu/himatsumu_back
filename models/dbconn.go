@@ -20,6 +20,7 @@ func Init() error {
 
 	dbconn = db
 
+
 	// オートマイグレーションを実行
 	err = autoMigrate()
 	if err != nil {
@@ -49,6 +50,9 @@ func autoMigrate() error {
 		&Picture{},
 	}
 
+	// 既存のテーブルを削除
+	ReseTable(models)
+
 	// トランザクションでマイグレーションを実行
 	err := dbconn.Transaction(func(tx *gorm.DB) error {
 		for _, model := range models {
@@ -58,6 +62,7 @@ func autoMigrate() error {
 		}
 		return nil
 	})
+
 
 	if err != nil {
 		return fmt.Errorf("auto migration failed: %v", err)

@@ -9,19 +9,18 @@ type User struct {
 	UserUUID   string      `gorm:"primaryKey;column:USER_UUID;type:CHAR(36);not null"`
 	UserID     string      `gorm:"column:USER_ID;type:VARCHAR(20);not null;uniqueIndex"`
 	UserName   string      `gorm:"column:USER_NAME;type:VARCHAR(20);not null"`
-	Password   string      `gorm:"column:PASSWORD;type:CHAR(36);not null"`
 	Gender     int         `gorm:"column:GENDER;type:INT;not null"`
 	Birthday   time.Time   `gorm:"column:BIRTHDAY;type:DATE;not null"`
 	CreateAt   time.Time   `gorm:"column:CREATE_AT;type:timestamp;not null"`
 	Friends    []Friend    `gorm:"foreignKey:UserUUID1;references:UserUUID"`
-	FriendReqs []FriendReq `gorm:"foreignKey:UserUUID1;references:UserUUID"`
+	FriendReqs []FriendReq  `gorm:"foreignKey:SenderUUID;references:UserUUID"` // 修正
 }
 
 // Friend フレンドテーブル
 type Friend struct {
 	FriendUUID  string         `gorm:"primaryKey;column:FRIEND_UUID;type:CHAR(36);not null"`
-	UserUUID1   string         `gorm:"column:USER_UUID1;type:CHAR(36);not null;uniqueIndex:idx_user_uuid_pair;foreignKey:UserUUID1;references:UserUUID"`
-	UserUUID2   string         `gorm:"column:USER_UUID2;type:CHAR(36);not null;uniqueIndex:idx_user_uuid_pair;foreignKey:UserUUID2;references:UserUUID"`
+	UserUUID1   string         `gorm:"column:USER_UUID1;type:CHAR(36);not null;uniqueIndex:idx_user_uuid_pair"`
+	UserUUID2   string         `gorm:"column:USER_UUID2;type:CHAR(36);not null;uniqueIndex:idx_user_uuid_pair"`
 	LastMeetAt  time.Time      `gorm:"column:LAST_MEET_AT;type:DATE;not null"`
 	CreateAt    time.Time      `gorm:"column:CREATE_AT;type:timestamp;not null"`
 	OwnChars    []OwnCharacter `gorm:"foreignKey:FriendUUID;references:FriendUUID"`
@@ -32,13 +31,14 @@ type Friend struct {
 
 // FriendReq フレンドリクエストテーブル
 type FriendReq struct {
-	FreReqUUID  string    `gorm:"primaryKey;column:FRE_REQ_UUID;type:CHAR(36);not null"`
-	UserUUID1   string    `gorm:"column:USER_UUID1;type:CHAR(36);not null;foreignKey:UserUUID1;references:UserUUID"`
-	UserUUID2   string    `gorm:"column:USER_UUID2;type:CHAR(36);not null;foreignKey:UserUUID2;references:UserUUID"`
-	ReqStatus   int       `gorm:"column:REQ_STATUS;type:INT;not null"`
-	ReqUpdateAt time.Time `gorm:"column:REQ_UPDATE_AT;type:timestamp;not null"`
-	ReqCreateAt time.Time `gorm:"column:REQ_CREATE_AT;type:timestamp;not null"`
+	FreReqUUID   string    `gorm:"primaryKey;column:FRE_REQ_UUID;type:CHAR(36);not null"`
+	SenderUUID   string    `gorm:"column:Sender_UUID;type:CHAR(36);not null"` // 修正
+	ReceiverUUID string    `gorm:"column:Receiver_UUID;type:CHAR(36);not null"` // 修正
+	ReqStatus    int       `gorm:"column:REQ_STATUS;type:INT;not null"` // 0:未承認、1:承認、2:拒否、3:取り消し
+	ReqUpdateAt  time.Time `gorm:"column:REQ_UPDATE_AT;type:timestamp;not null"`
+	ReqCreateAt  time.Time `gorm:"column:REQ_CREATE_AT;type:timestamp;not null"`
 }
+
 
 // CharaType キャラクター種別テーブル
 type CharaType struct {

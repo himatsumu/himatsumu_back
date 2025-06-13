@@ -2,18 +2,27 @@ package main
 
 import (
 	"app/models"
+	"log"
 	"os"
 )
 
 func main() {
+
 	// モデル初期化
 	models.Init()
 	
 	// サーバー起動
-	mainServer()
+	// mainServer()
+
+	DebugModel()
 }
 
 func DebugModel() {
+
+	result := models.Create_Sample_User()
+	log.Println("結果",result)
+	results := models.Debag(result)
+	log.Println(results)
 }
 
 func mainServer() {
