@@ -50,12 +50,19 @@ func Debug(user []User) error {
 	}
 	log.Println("受信",results)
 
-
-	aa,err := Rejection(results[0]["id"],user[1].UserUUID)
+	//拒否
+	err = Rejection(results[0]["id"],user[1].UserUUID)
 	if err != nil {
 		return err
 	}
-	log.Print(aa)
+
+
+	//承認
+	err = Record_Friends(results[1]["id"],user[1].UserUUID)
+	if err != nil {
+		return err
+	}
+
 
 
 	return errors.New("全部OK")

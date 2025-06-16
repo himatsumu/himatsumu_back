@@ -102,33 +102,23 @@ func Get_Request(Receiver_id string) (map[int]map[string]string, error) {
 }
 
 //フレンド申請承認
-func Record_Friends(SenderUUID string,ReceiverUUID string)(string,error){
-	
-	return "",nil
-}
-
-// フレンドリクエスト拒否
-func Rejection(ruid string, ReceiverUUID string) (string,error) {
-
+func Record_Friends(ruid string,ReceiverUUID string)(error){
 	//リクエストが存在しているか
 	Sid, Rid, err := Request(ruid)
-	_=Sid
+
 	//リクエストでエラーならば
 	if err != nil {
 		log.Println("error")
-		return "",err
+		return err
 	}
 
 	//受信者側が一致していない時
 	if Rid != ReceiverUUID {
-		return "",errors.New("user_mismatch_existing")
+		return errors.New("user_mismatch_existing")
 	}
 
-	log.Println("拒否")
+	log.Println("承認")
 	log.Println(ruid)
-
-
-	time.Sleep(3 * time.Second)
 
 	rfilter := &FriendReq{}
 
@@ -137,7 +127,59 @@ func Rejection(ruid string, ReceiverUUID string) (string,error) {
 
 	// エラーチェック
 	if result.Error != nil {
-		return "",result.Error // エラーがあれば返す
+		return result.Error // エラーがあれば返す
+	}
+
+	if rfilter.ReqStatus != 0 {
+		return errors.New("Incorrect request error") 
+	}
+
+	// フィールドを更新
+	rfilter.SenderUUID = Sid
+	rfilter.ReceiverUUID = ReceiverUUID
+	rfilter.ReqStatus = 1
+	rfilter.ReqUpdateAt = time.Now()
+
+	// 更新されたレコードを保存
+	saveResult := dbconn.Save(&rfilter)
+
+	// エラーチェック
+	if saveResult.Error != nil {
+		return saveResult.Error // エラーがあれば返す
+	}
+
+	return nil
+}
+
+// フレンドリクエスト拒否
+func Rejection(ruid string, ReceiverUUID string) (error) {
+
+	//リクエストが存在しているか
+	Sid, Rid, err := Request(ruid)
+
+	//リクエストでエラーならば
+	if err != nil {
+		log.Println("error")
+		return err
+	}
+
+	//受信者側が一致していない時
+	if Rid != ReceiverUUID {
+		return errors.New("user_mismatch_existing")
+	}
+
+	log.Println("拒否")
+	log.Println(ruid)
+
+
+	rfilter := &FriendReq{}
+
+	// フレンドリクエストを取得
+	result := dbconn.Where(&FriendReq{FreReqUUID: ruid}).First(&rfilter)
+
+	// エラーチェック
+	if result.Error != nil {
+		return result.Error // エラーがあれば返す
 	}
 
 	// フィールドを更新
@@ -151,8 +193,8 @@ func Rejection(ruid string, ReceiverUUID string) (string,error) {
 
 	// エラーチェック
 	if saveResult.Error != nil {
-		return "",saveResult.Error // エラーがあれば返す
+		return saveResult.Error // エラーがあれば返す
 	}
 
-	return "",nil
+	return nil
 }
