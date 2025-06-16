@@ -9,7 +9,7 @@ import (
 
 func Init() {
 
-	err := godotenv.Load(".env")
+	err := godotenv.Overload(".env")
 	if err != nil {
 		fmt.Println("Error loading .env file:", err)
 		os.Exit(1)
