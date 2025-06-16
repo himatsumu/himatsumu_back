@@ -127,3 +127,7 @@ type Picture struct {
 	PicURL   string    `gorm:"column:PIC_URL;type:VARCHAR(50);not null"`
 	CreateAt time.Time `gorm:"column:CREATE_AT;type:timestamp;not null"`
 }
+
+//ここまでデータベース
+
+

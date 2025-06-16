@@ -18,9 +18,7 @@ func SendRequest(Sender_id string, Receiver_id string) (string, error) {
 	request := dbconn.Where(FriendReq{SenderUUID: Sender_id, ReceiverUUID: Receiver_id}).Or(FriendReq{SenderUUID: Receiver_id, ReceiverUUID: Sender_id}).First(&Sent_filter).RowsAffected
 	//既にフレンドなら1、フレンドでなかったら0を代入(and)
 	friend := dbconn.Where(Friend{UserUUID1: Sender_id, UserUUID2: Receiver_id}).Or(Friend{UserUUID1: Receiver_id, UserUUID2: Sender_id}).First(&Friend_filter).RowsAffected
-
-	log.Println(request)
-	log.Println(friend)
+	
 	//既にリクエストが存在している場合
 	if request != 0 {
 		return "", errors.New("request_is_already_existing")
@@ -52,26 +50,28 @@ func SendRequest(Sender_id string, Receiver_id string) (string, error) {
         return "", err // エラー処理を追加
     }
 	
+
 	log.Println("書き込み完了")
 	return suid, err
 
 }
 
 // 受信済み取得
-func Get_Request(Receiver_id string) (map[string]map[string]string, error) {
+func Get_Request(Receiver_id string) (map[int]map[string]string, error) {
 
 	//ネームトークンフィルター
 	var named_filter []FriendReq
 
 	//引数と同じ受信側IDを取得
-	length := dbconn.Where(FriendReq{ReceiverUUID: Receiver_id}).Find(&named_filter).RowsAffected
+	deta := dbconn.Where(FriendReq{ReceiverUUID: Receiver_id}).Find(&named_filter)
+	length := deta.RowsAffected
 
 	//map宣言
-	maps := map[string]map[string]string{}
+	maps := map[int]map[string]string{}
 
 	//受信した配列の個数がが0の時
 	if length == 0 {
-		return map[string]map[string]string{}, nil
+		return map[int]map[string]string{}, nil
 	}
 
 	//受信した配列をすべてmapに代入
@@ -90,12 +90,50 @@ func Get_Request(Receiver_id string) (map[string]map[string]string, error) {
 			continue
 		}
 
-		maps[named_filter[i].FreReqUUID] = map[string]string{
-			"uname": uinfo.UserData.UserName,                                   //検索した側の名前
+		maps[i] = map[string]string{
+			"id"   : named_filter[i].FreReqUUID ,                               //フレンドリクエストID
+			"userid": uinfo.UserData.UserUUID,                                  //検索した側のid
 			"sname": sinfo.UserData.UserName,                                   //相手側の名前
 			"time" : named_filter[i].ReqUpdateAt.Format("2006-01-02 15:04:05"), //リクエストした時間
 		}
 	}
 
 	return maps, nil
+}
+
+//フレンド申請承認
+func Record_Friends(SenderUUID string,ReceiverUUID string)(string,error){
+	return "",nil
+}
+
+// フレンドリクエスト拒否
+func Rejection(ruid string, ReceiverUUID string) (string,error) {
+
+	//リクエストが存在しているか
+	Sid, Rid, err := Request(ruid)
+	_ = Sid
+
+	//リクエストでエラーならば
+	if err != nil {
+		log.Println("error")
+		return "",err
+	}
+
+	//受信者側が一致していない時
+	if Rid != ReceiverUUID {
+		return "",errors.New("user_mismatch_existing")
+	}
+
+	log.Println("拒否")
+	log.Println(ruid)
+
+	// フレンドリクエストの状態を拒否に変更
+	result := dbconn.Model(FriendReq{}).Where("FRE_REQ_UUID = ?", ruid).Update("REQ_STATUS", 2)
+	if result.Error != nil {
+		log.Println("フレンドリクエストの更新エラー:", result.Error)
+		return "", result.Error
+	}
+
+	log.Println("フレンドリクエストが拒否されました:", ruid)
+	return "",nil
 }

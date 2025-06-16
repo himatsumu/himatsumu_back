@@ -20,8 +20,7 @@ func main() {
 func DebugModel() {
 
 	result := models.Create_Sample_User()
-	log.Println("結果",result)
-	results := models.Debag(result)
+	results := models.Debug(result)
 	log.Println(results)
 }
 

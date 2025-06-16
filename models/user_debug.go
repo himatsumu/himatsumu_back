@@ -7,6 +7,7 @@ import (
 	"github.com/google/uuid"
 )
 
+//テーブルを全て削除する
 func ReseTable(models []interface{}) {
 
     err := dbconn.Migrator().DropTable(models...)
@@ -15,6 +16,7 @@ func ReseTable(models []interface{}) {
     }
 }
 
+//ユーザーのサンプルデータを入れる
 func Create_Sample_User() ([]User){
 	// サンプルデータの作成
 	users := make([]User, 10)

@@ -7,10 +7,7 @@ import (
 	"log"
 )
 
-
-
-
-func Debag(user []User) error {
+func Debug(user []User) error {
 	//ユーザーIDを元にユーザーデータを返す1
 	result, err := GetUser_ByID(user[0].UserUUID)
 
@@ -53,5 +50,14 @@ func Debag(user []User) error {
 	}
 	log.Println("受信",results)
 
+
+	aa,err := Rejection(results[0]["id"],user[1].UserUUID)
+	if err != nil {
+		return err
+	}
+	log.Print(aa)
+
+
 	return errors.New("全部OK")
 }
+
