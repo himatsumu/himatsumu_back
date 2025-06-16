@@ -41,8 +41,8 @@ func SendRequest(Sender_id string, Receiver_id string) (string, error) {
 		SenderUUID:   Sender_id,   //送った側のID
 		ReceiverUUID: Receiver_id, //受け取る側のID
 		ReqStatus:    0,           ////0:未承認、1:承認、2:拒否、3:取り消し
-		ReqUpdateAt:  time.Time{}, //最終更新時間
-		ReqCreateAt:  time.Time{}, //送った時間
+		ReqUpdateAt:  time.Now(), //最終更新時間
+		ReqCreateAt:  time.Now(), //送った時間
 	}
 
 	//データベースに書き込む
@@ -103,6 +103,7 @@ func Get_Request(Receiver_id string) (map[int]map[string]string, error) {
 
 //フレンド申請承認
 func Record_Friends(SenderUUID string,ReceiverUUID string)(string,error){
+	
 	return "",nil
 }
 
@@ -111,8 +112,7 @@ func Rejection(ruid string, ReceiverUUID string) (string,error) {
 
 	//リクエストが存在しているか
 	Sid, Rid, err := Request(ruid)
-	_ = Sid
-
+	_=Sid
 	//リクエストでエラーならば
 	if err != nil {
 		log.Println("error")
@@ -127,13 +127,32 @@ func Rejection(ruid string, ReceiverUUID string) (string,error) {
 	log.Println("拒否")
 	log.Println(ruid)
 
-	// フレンドリクエストの状態を拒否に変更
-	result := dbconn.Model(FriendReq{}).Where("FRE_REQ_UUID = ?", ruid).Update("REQ_STATUS", 2)
+
+	time.Sleep(3 * time.Second)
+
+	rfilter := &FriendReq{}
+
+	// フレンドリクエストを取得
+	result := dbconn.Where(&FriendReq{FreReqUUID: ruid}).First(&rfilter)
+
+	// エラーチェック
 	if result.Error != nil {
-		log.Println("フレンドリクエストの更新エラー:", result.Error)
-		return "", result.Error
+		return "",result.Error // エラーがあれば返す
 	}
 
-	log.Println("フレンドリクエストが拒否されました:", ruid)
+	// フィールドを更新
+	rfilter.SenderUUID = Sid
+	rfilter.ReceiverUUID = ReceiverUUID
+	rfilter.ReqStatus = 2
+	rfilter.ReqUpdateAt = time.Now()
+
+	// 更新されたレコードを保存
+	saveResult := dbconn.Save(&rfilter)
+
+	// エラーチェック
+	if saveResult.Error != nil {
+		return "",saveResult.Error // エラーがあれば返す
+	}
+
 	return "",nil
 }
