@@ -9,7 +9,7 @@ import (
 
 func Debug(user []User) error {
 	//ユーザーIDを元にユーザーデータを返す1
-	result, err := GetUser_ByID(user[0].UserUUID)
+	result, err := GetUserByID(user[0].UserUUID)
 
 	if err != nil {
 		return err
@@ -18,52 +18,54 @@ func Debug(user []User) error {
 		return errors.New("ユーザーいませんでした！(id)")
 	}
 	
-
 	// ユーザ名でユーザを取得する
-	result, err = GetUser_ByName(user[0].UserName)
+	result, err = GetUserByName(user[0].UserName)
 	if !(result.IsFind) {
 		return errors.New("ユーザーいませんでした！(名前)")
 	}
 	if err != nil {
 		return err
 	}
-	log.Println(result.UserData)
 
 	// フレンド申請送信1
-	suid1, err := SendRequest(user[0].UserUUID, user[1].UserUUID)
+	err = SendFriendRequest(user[0].UserUUID, user[1].UserUUID)
 	if err != nil {
 		return err
 	}
-	log.Println("申請1",suid1)
 
 	// フレンド申請送信2
-	suid2, err := SendRequest(user[3].UserUUID, user[1].UserUUID)
+	err = SendFriendRequest(user[3].UserUUID, user[1].UserUUID)
 	if err != nil {
 		return err
 	}
-	log.Println("申請2",suid2)
-
+	
 	// 受信済み取得
-	results, err := Get_Request(user[1].UserUUID)
+	results, err := ReceivedRequest(user[1].UserUUID)
 	if err != nil {
 		return err
 	}
 	log.Println("受信",results)
 
 	//拒否
-	err = Rejection(results[0]["id"],user[1].UserUUID)
+	err = ChangeRequestStatus(results[0],2)
 	if err != nil {
 		return err
 	}
-
-
+	
 	//承認
-	err = Record_Friends(results[1]["id"],user[1].UserUUID)
+	err = ChangeRequestStatus(results[1],1)
 	if err != nil {
 		return err
 	}
 
-
+	// 受信済み取得
+	results, err = ReceivedRequest(user[1].UserUUID)
+	if err != nil {
+		return err
+	}
+	for _, result := range results {
+		log.Println("ステータス",result.ReqStatus)
+	}
 
 	return errors.New("全部OK")
 }

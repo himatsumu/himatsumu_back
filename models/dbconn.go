@@ -20,7 +20,6 @@ func Init() error {
 
 	dbconn = db
 
-
 	// オートマイグレーションを実行
 	err = autoMigrate()
 	if err != nil {
@@ -69,4 +68,13 @@ func autoMigrate() error {
 	}
 
 	return nil
+}
+
+//テーブルを全て削除する
+func ReseTable(models []interface{}) {
+
+    err := dbconn.Migrator().DropTable(models...)
+    if err != nil {
+        panic("failed to drop table")
+    }
 }

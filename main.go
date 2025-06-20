@@ -18,8 +18,7 @@ func main() {
 }
 
 func DebugModel() {
-
-	result := models.Create_Sample_User()
+	result := models.CreateSampleUser()
 	results := models.Debug(result)
 	log.Println(results)
 }
