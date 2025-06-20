@@ -3,6 +3,8 @@ module app
 go 1.21.13
 
 require (
+	github.com/golang-jwt/jwt/v5 v5.2.2
+	github.com/joho/godotenv v1.5.1
 	github.com/labstack/echo v3.3.10+incompatible
 	gorm.io/gorm v1.30.0
 )
