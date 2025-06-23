@@ -28,16 +28,18 @@ func Debug(user []User) error {
 	}
 
 	// フレンド申請送信1
-	err = SendFriendRequest(user[0].UserUUID, user[1].UserUUID)
+	suid1,err := SendFriendRequest(user[0].UserUUID, user[1].UserUUID)
 	if err != nil {
 		return err
 	}
+	log.Println(suid1)
 
 	// フレンド申請送信2
-	err = SendFriendRequest(user[3].UserUUID, user[1].UserUUID)
+	suid2,err := SendFriendRequest(user[3].UserUUID, user[1].UserUUID)
 	if err != nil {
 		return err
 	}
+	log.Println(suid2)
 	
 	// 受信済み取得
 	results, err := ReceivedRequest(user[1].UserUUID)

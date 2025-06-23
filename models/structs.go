@@ -56,10 +56,13 @@ type Character struct {
 	CharaType  int            `gorm:"column:CHARA_TYPE;type:INT;not null"`
 	TypeStage  int            `gorm:"column:TYPE_STAGE;type:INT;not null"`
 	Exp        int            `gorm:"column:EXP;type:INT;not null;default:0"`
-	Birthday   *time.Time     `gorm:"column:BARTHDAY;type:DATE"`
-	FirstEvo   *time.Time     `gorm:"column:FIRST_EVO;type:DATE"`
-	SecondEvo  *time.Time     `gorm:"column:SECOND_EVO;type:DATE"`
-	ThirdEvo   *time.Time     `gorm:"column:THIRD_EVO;type:DATE"`
+	Birthday   string         `gorm:"column:BARTHDAY;"`
+	FirstEvo   time.Time 	  `gorm:"column:FIRST_EVO;type:timestamp;`
+	SecondEvo  time.Time 	  `gorm:"column:SECOND_EVO;type:timestamp;`
+	ThirdEvo   time.Time 	  `gorm:"column:THIRD_EVO;type:timestamp;`
+	FourthEvo  time.Time 	  `gorm:"column:FOURTH_EVO;type:timestamp"`
+	FifthEvo   time.Time 	  `gorm:"column:FIFTH_EVO;type:timestamp"`
+	SixthEvo   time.Time 	  `gorm:"column:SIXTH_EVO;type:timestamp"`
 	Point      int            `gorm:"column:POINT;type:INT;not null;default:0"`
 	CharaImage string         `gorm:"column:CHARA_IMAGE;type:VARCHAR(50)"`
 	OwnChars   []OwnCharacter `gorm:"foreignKey:CharaUUID;references:CharaUUID"`

@@ -55,11 +55,11 @@ func IsRequest(uuid string) (FriendReq, error) {
 
 
 //フレンド申請を登録
-func SendFriendRequest(Sender_id string,Receiver_id string)(error) {
+func SendFriendRequest(Sender_id string,Receiver_id string)(string,error) {
 	//uuid生成
 	suid, err := utils.Genid()
 	if err != nil {
-		return errors.New("uuid generation error")
+		return"", errors.New("uuid generation error")
 	}
 
 	//センドトークンの情報
@@ -74,20 +74,8 @@ func SendFriendRequest(Sender_id string,Receiver_id string)(error) {
 
 	//データベースに書き込む
 	if err := dbconn.Create(&Stoken).Error; err != nil {
-        return err // エラー処理を追加
+        return "",err // エラー処理を追加
     }
 
-	return nil
-}
-
-//リクエストの状態を変更
-func ChangeRequestStatus(requests FriendReq,reqest int)(error) {
-	// フィールドを更新
-	requests.ReqStatus = reqest
-	requests.ReqUpdateAt = time.Now()
-
-	// 更新されたレコードを保存
-	err := dbconn.Updates(&requests).Error
-
-	return err
+	return suid,nil
 }
