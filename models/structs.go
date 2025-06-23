@@ -21,7 +21,7 @@ type Friend struct {
 	FriendUUID  string         `gorm:"primaryKey;column:FRIEND_UUID;type:CHAR(36);not null"`
 	UserUUID1   string         `gorm:"column:USER_UUID1;type:CHAR(36);not null;uniqueIndex:idx_user_uuid_pair"`
 	UserUUID2   string         `gorm:"column:USER_UUID2;type:CHAR(36);not null;uniqueIndex:idx_user_uuid_pair"`
-	LastMeetAt  time.Time      `gorm:"column:LAST_MEET_AT;type:DATE;not null"`
+	LastMeetAt  time.Time      `gorm:"column:LAST_MEET_AT;type:DATE;"`
 	CreateAt    time.Time      `gorm:"column:CREATE_AT;type:timestamp;not null"`
 	OwnChars    []OwnCharacter `gorm:"foreignKey:FriendUUID;references:FriendUUID"`
 	OwnCostumes []OwnCostume   `gorm:"foreignKey:FriendUUID;references:FriendUUID"`
