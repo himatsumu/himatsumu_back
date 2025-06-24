@@ -5,9 +5,18 @@ import (
 )
 
 type result struct {
-	status int
-	err    error
+    message string  `json:"message"`
+    status  int    `json:"status"`
+    data    interface{} `"json:data"`
 }
+
+const  (
+	notaccept = 0   //未承認
+	accept = 1      //承認
+	reject = 2		//拒否
+	cancel = 3		//送信キャンセル
+)
+
 
 const (
 	AlreadySent = "すでにリクエストを送信しています"
@@ -18,6 +27,8 @@ const (
 	RequestNotFound  = "リクエストが存在しませんでした"
 	UserInfoFailed = "ユーザー情報取得に失敗しました"
 	Incorrectrequesterror = "フレンドリクエストが無効です"
-	UserMismatchExisting = "受信者側が一致していません"
+	UserMismatchExisting = "ユーザーが一致していません"
+	CharacterNotRegistration = "キャラクターを生成できませんでした"
+
 	
 )

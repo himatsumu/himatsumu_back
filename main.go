@@ -2,6 +2,7 @@ package main
 
 import (
 	"app/models"
+	"app/services"
 	"encoding/base64"
 	"fmt"
 	"log"
@@ -9,9 +10,6 @@ import (
 )
 
 func main() {
-
-	// モデル初期化
-	models.Init()
 
 	// 環境変数読み込み
 	Init()
@@ -21,6 +19,9 @@ func main() {
 		log.Fatal(err)
 	}
 
+	// モデル初期化
+	models.Init()
+
 	// サーバー起動
 	// mainServer()
 
@@ -29,8 +30,9 @@ func main() {
 
 func DebugModel() {
 	result := models.CreateSampleUser()
-	results := models.Debug(result)
-	log.Println(results)
+	// results := models.Debug(result)
+	// log.Println("result",results)
+	services.Debug(result)
 }
 
 func mainServer() {

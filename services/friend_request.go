@@ -2,17 +2,9 @@ package services
 
 import (
 	"app/models"
-	"errors"
 	"log"
 	"net/http"
 	"time"
-)
-
-const  (
-	notaccept = 0   //未承認
-	accept = 1      //承認
-	reject = 2		//拒否
-	cancel = 3		//送信キャンセル
 )
 
 // フレンド申請送信
@@ -21,8 +13,9 @@ func SendRequest(Sender_id string, Receiver_id string) result {
 	//同じユーザーの場合
 	if Sender_id == Receiver_id {
 		return result{
-			status: http.StatusBadRequest,
-			err:    errors.New(SameUser),
+			message: SameUser,
+			status:  http.StatusBadRequest,
+			data:    nil,
 		}
 	}
 
@@ -32,65 +25,69 @@ func SendRequest(Sender_id string, Receiver_id string) result {
 
 	if !uresult1.IsFind || !uresult2.IsFind {
 		return result{
+			message: UserNotFound,
 			status: http.StatusNotFound,
-			err:    errors.New(UserNotFound),
+			data: "",
 		}
 	}
 
 	//リクエストとフレンドであるか検索する
-	request, friend := models.IdRequestfound(Sender_id, Receiver_id)
+	request, friend := models.IdRequestfound(Sender_id,Receiver_id)
 
 	//既にリクエストが存在している場合
 	if request != 0 {
 		return result{
+			message: AlreadySent,
 			status: http.StatusBadRequest,
-			err:    errors.New(AlreadySent),
+			data: "",
 		}
 	}
 
 	//既にフレンドである場合
 	if friend != 0 {
 		return result{
+			message: AlreadyFriends,
 			status: http.StatusBadRequest,
-			err:    errors.New(AlreadyFriends),
+			data: "",
 		}
 	}
-
 	//データベースに書き込み
-	err = models.SendFriendRequest(Sender_id, Receiver_id)
+	fuid ,err := models.SendFriendRequest(Sender_id, Receiver_id)
 
 	if err != nil {
 		log.Println(err)
 		return result{
+			message: FriendRegistrationFailed,
 			status: http.StatusInternalServerError,
-			err:    errors.New(FriendRegistrationFailed),
+			data: "",
 		}
 	}
 
 	return result{
+		message: "",
 		status: http.StatusCreated,
-		err:    nil,
+		data: fuid,
 	}
-
 }
 
 //フレンドリクエストの戻り値
 type FriendRequest struct {
-	ReqID      string
-	UserID     string
+	ReqID       string
+	SenderId     string
+	ReceverId   string
 	SenderName string
 	ReqTime    time.Time
 }
 
 // 受信済み取得
-func GetRequest(Receiver_id string) ([]FriendRequest, result) {
+func GetRequest(Receiver_id string) (result) {
 	//引数をもとにリクエスト構造体を返す
 	requests,err := models.ReceivedRequest(Receiver_id)
 	if err != nil {
-		return []FriendRequest{},
-		result{
+		return  result{
+			message: RequestNotFound,
 			status: http.StatusNotFound,
-			err:    errors.New(RequestNotFound),
+			data: "",
 		}
 	}
 
@@ -103,24 +100,28 @@ func GetRequest(Receiver_id string) ([]FriendRequest, result) {
 
 		//ユーザー情報取得に失敗
 		if err != nil {
-			return []FriendRequest{},
-			result{
+			return result{
+				message: UserInfoFailed,
 				status: http.StatusInternalServerError,
-				err:    errors.New(UserInfoFailed),
+				data: "",
 			}
 		}
 
 		maps = append(maps, FriendRequest{
 			ReqID:      request.FreReqUUID,
-			UserID:     request.SenderUUID,
+			SenderId:   request.SenderUUID,
+			ReceverId:  request.ReceiverUUID,
 			SenderName: sender.UserData.UserName,
-			ReqTime:    request.ReqCreateAt,
+			ReqTime:    request.ReqUpdateAt,
 		})
-
 	}
-	return maps,result{
+
+	log.Println("map",maps)
+
+	return result{
+		message: "",
 		status: http.StatusOK,
-		err:    nil,
+		data:    maps,
 	}
 }
 
@@ -132,16 +133,18 @@ func ChangeRequestStatus(ruid string,ReceiverUUID string,status int)result{
 	//リクエストでエラーならば
 	if err != nil || request.ReqStatus != 0 {
 		return result{
+			message: Incorrectrequesterror,
 			status: http.StatusBadRequest,
-			err:    errors.New(Incorrectrequesterror),
+			data: "",
 		}
 	}
 
 	//受信者側が一致していない時
 	if request.ReceiverUUID != ReceiverUUID {
 		return result{
+			message: UserMismatchExisting,
 			status: http.StatusBadRequest,
-			err:    errors.New(UserMismatchExisting),
+			data: "",
 		} 
 	}
 
@@ -152,13 +155,16 @@ func ChangeRequestStatus(ruid string,ReceiverUUID string,status int)result{
 	if err != nil {
 		log.Println(err)
 		return result{
+			message: UserMismatchExisting,
 			status: http.StatusInternalServerError,
-			err:    errors.New(UserMismatchExisting),
+			data: "",
 		}
 	}
 
 	return result{
+		message: "",
 		status: http.StatusOK,
-		err:    nil,
+		data:    nil,
 	}
 }
+
