@@ -9,7 +9,6 @@ import (
 
 // フレンド申請送信
 func SendRequest(Sender_id string, Receiver_id string) result {
-
 	//同じユーザーの場合
 	if Sender_id == Receiver_id {
 		return result{
@@ -17,7 +16,7 @@ func SendRequest(Sender_id string, Receiver_id string) result {
 			status:  http.StatusBadRequest,
 			data:    nil,
 		}
-	}
+	}	
 
 	//ユーザーが存在するかチェック
 	uresult1, err := models.GetUserByID(Sender_id)

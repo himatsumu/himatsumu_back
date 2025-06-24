@@ -16,8 +16,7 @@ func Debug(user []models.User)  {
 		log.Println(result1.message)
 	}
 	log.Println("送信結果1",result1.data)
-
-
+	
 	// フレンド申請送信2
 	result2 := SendRequest(user[3].UserUUID, user[1].UserUUID)
 	if result2.status != 200 {
@@ -53,6 +52,8 @@ func Debug(user []models.User)  {
 		log.Println(result6.message)
 	}
 	log.Println(result6)
-	
+
+	result7 := GenName()
+	_=result7
 }
 

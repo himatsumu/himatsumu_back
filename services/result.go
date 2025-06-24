@@ -29,6 +29,6 @@ const (
 	Incorrectrequesterror = "フレンドリクエストが無効です"
 	UserMismatchExisting = "ユーザーが一致していません"
 	CharacterNotRegistration = "キャラクターを生成できませんでした"
-
+	CouldNotGenerateName = "名前を生成できませんでした"
 	
 )
