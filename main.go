@@ -32,8 +32,7 @@ func DebugModel() {
 	result := models.CreateSampleUser()
 	// results := models.Debug(result)
 	// log.Println("result",results)
-	result1 := services.Debug(result)
-	log.Println(result1)
+	services.Debug(result)
 }
 
 func mainServer() {

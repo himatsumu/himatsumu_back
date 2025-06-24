@@ -73,7 +73,7 @@ func FriendRecord(ruid string,Sender_id string,Receiver_id string)(result){
 }
 
 //フレンド一覧取得
-func GetUser(uid string) result{
+func GetFriends(uid string) result{
 	getFriends,err := models.GetUserByID(uid)
 	if err != nil {
 		return result{
