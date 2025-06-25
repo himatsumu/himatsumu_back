@@ -7,6 +7,7 @@ import (
 	"math/rand"
 )
 
+//キャラクター生成
 func RegisterCharacter(frienfId string)(string,error) {
 	//uuid生成
 	fuid, err := utils.Genid()
@@ -39,7 +40,7 @@ func RegisterCharacter(frienfId string)(string,error) {
 }
 
 //キャラクターとフレンドの中間テーブル生成
-func RegisterOwnCharacter(friendId string,characterId string) error{
+func RegisterOwnCharacter(friendId string,characterId string) error {
 
 	//中間テーブル生成トークン生成
 	Ctoken := OwnCharacter{
@@ -53,4 +54,11 @@ func RegisterOwnCharacter(friendId string,characterId string) error{
     }
 
 	return nil 
+}
+
+//キャラクターの名前登録
+func RegisterCharacterName(charauid string,name string) error {
+	return dbconn.Where(Character{
+		CharaUUID:  charauid,
+	}).Update("CHARA_NAME",name).Error
 }
