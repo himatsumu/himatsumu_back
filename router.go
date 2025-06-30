@@ -3,9 +3,7 @@ package main
 import (
 	"app/middleware"
 	"app/services"
-	"app/controllers"
 	"app/utils"
-	"encoding/json"
 	"log"
 	"net/http"
 
@@ -31,10 +29,10 @@ func InitServer() *echo.Echo {
 		return ctx.String(http.StatusOK, "Hello, World! from go-server.")
 	})
 
-	
+	UserService := services.NewUserService()
+
 	authGroup := server.Group("/auth", jwtMiddleware)
-	authGroup.GET("/", services.GetAuthenticatedData)	// http://localhost:8888/auth/
-	
+	authGroup.GET("/", UserService.GetAuthenticatedData) // http://localhost:8888/auth/
 
 	return server
 }
