@@ -7,6 +7,7 @@ import (
 	"math/rand"
 )
 
+//キャラクター作成
 func RegisterCharacter(frienfId string)(string,error) {
 	//uuid生成
 	fuid, err := utils.Genid()

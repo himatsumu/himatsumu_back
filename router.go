@@ -6,7 +6,6 @@ import (
 	"app/utils"
 	"log"
 	"net/http"
-
 	"github.com/labstack/echo"
 )
 
@@ -32,6 +31,7 @@ func InitServer() *echo.Echo {
 	// ユーザーサービス
 	userService := services.NewUserService()
 	server.GET("/auth", userService.GetAuthenticatedData, jwtMiddleware)
+
 
 	return server
 }
