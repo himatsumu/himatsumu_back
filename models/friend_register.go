@@ -6,6 +6,7 @@ import (
 	"time"
 )
 
+//フレンド登録
 func FriendRecord(Sender_id string,Receiver_id string)(string,error){
 	//uuid生成
 	fuid, err := utils.Genid()

@@ -6,7 +6,6 @@ import (
 	"app/utils"
 	"log"
 	"net/http"
-
 	"github.com/labstack/echo"
 )
 
@@ -33,6 +32,7 @@ func InitServer() *echo.Echo {
 
 	authGroup := server.Group("/auth", jwtMiddleware)
 	authGroup.GET("/", UserService.GetAuthenticatedData) // http://localhost:8888/auth/
+
 
 	return server
 }
