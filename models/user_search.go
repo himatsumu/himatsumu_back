@@ -10,7 +10,7 @@ import (
 //検索結果
 type FindResult struct{
 	IsFind   bool
-	UserData User
+	UserData *User
 }
 
 //ユーザーIDを元にユーザーデータを返す
@@ -40,7 +40,7 @@ func GetUserByID(uid string) (FindResult,error) {
 	result.IsFind = true
 
 	//情報をセットする
-	result.UserData = fusers
+	result.UserData = &fusers
 
 	return result, nil
 }
@@ -70,8 +70,35 @@ func GetUserByName(uname string) (FindResult, error) {
 	result.IsFind = true
 
 	//情報をセットする
-	result.UserData = fuser
+	result.UserData = &fuser
 
 	return result, nil
 }
 
+func GetUserByUUID(uuid string) (FindResult, error) {
+	//空のユーザを作成する
+	fuser := User{}
+	
+	//結果
+	result := FindResult{IsFind: false}
+	
+	//ユーザを取得する
+	find_result := dbconn.Preload(clause.Associations).First(&fuser, &User{UserUUID: uuid})
+	
+	//見つからなかった時 - エラーではなく、IsFind: falseで返す
+	if err := find_result.Error; errors.Is(err, gorm.ErrRecordNotFound) {
+		return result, nil // エラーではなくnilを返す
+	}
+	
+	//その他のエラーがあった場合
+	if find_result.Error != nil {
+		return result, find_result.Error
+	}
+	
+	//見つかった時
+	result.IsFind = true
+	//情報をセットする
+	result.UserData = &fuser
+	
+	return result, nil
+}

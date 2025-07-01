@@ -2,20 +2,15 @@ package services
 
 import (
 	"app/middleware"
+	"app/models"
 	"fmt"
 	"net/http"
 
 	"github.com/labstack/echo"
 )
 
-type UserService struct{}
-
-func NewUserService() *UserService {
-	return &UserService{}
-}
-
-// 認証済みユーザーの情報を返します
-func (s *UserService) GetAuthenticatedData(c echo.Context) error {
+// 認証済みユーザーの情報を返す
+func GetAuthenticatedData(c echo.Context) error {
 	// ミドルウェアによってコンテキストに保存されたクレーム情報を取得
 	claims, ok := c.Get("claims").(*middleware.JWTClaims)
 	if !ok {
@@ -34,4 +29,17 @@ func (s *UserService) GetAuthenticatedData(c echo.Context) error {
 	fmt.Println(response)
 	// c.JSON() を使ってJSONレスポンスを返す
 	return c.JSON(http.StatusOK, response)
+}
+
+// ユーザー情報を返す
+func CheckUser(uuid string) (models.FindResult, error) {
+	// ユーザを取得する(なければいないことを返す)
+	result, err := models.GetUserByUUID(uuid)
+	if err != nil {
+		fmt.Println("Database error:", err)
+		return models.FindResult{IsFind: false}, err
+	}
+
+	// 結果をそのまま返す（IsFind: false の場合も含む）
+	return result, nil
 }

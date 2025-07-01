@@ -11,17 +11,16 @@ import (
 
 // JWTClaims はJWTに含まれるカスタムクレームです
 type JWTClaims struct {
-	UUID string `json:"uuid`
 	jwt.RegisteredClaims
 }
 
 // JWTを検証する
 func JWTAuthMiddleware(publicKey *rsa.PublicKey) echo.MiddlewareFunc {
 	return func(next echo.HandlerFunc) echo.HandlerFunc {
-		return func(c echo.Context) error {
-			authHeader := c.Request().Header.Get("Authorization")
+		return func(ctx echo.Context) error {
+			authHeader := ctx.Request().Header.Get("Authorization")
 			if authHeader == "" {
-				return c.JSON(http.StatusUnauthorized, map[string]string{"error": "Authorization header is required"})
+				return ctx.JSON(http.StatusUnauthorized, map[string]string{"error": "Authorization header is required"})
 			}
 			tokenString := strings.TrimPrefix(authHeader, "Bearer ")
 
@@ -34,17 +33,17 @@ func JWTAuthMiddleware(publicKey *rsa.PublicKey) echo.MiddlewareFunc {
 			})
 
 			if err != nil {
-				return c.JSON(http.StatusUnauthorized, map[string]string{"error": "Invalid token: " + err.Error()})
+				return ctx.JSON(http.StatusUnauthorized, map[string]string{"error": "Invalid token: " + err.Error()})
 			}
 			if !token.Valid {
-				return c.JSON(http.StatusUnauthorized, map[string]string{"error": "Token is not valid"})
+				return ctx.JSON(http.StatusUnauthorized, map[string]string{"error": "Token is not valid"})
 			}
 
 			// クレームをEchoのコンテキストに保存
-			c.Set("claims", claims)
+			ctx.Set("user_uuid", claims.Subject)
 
 			// 次の処理を呼び出す
-			return next(c)
+			return next(ctx)
 		}
 	}
 }

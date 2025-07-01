@@ -23,9 +23,9 @@ func main() {
 	models.Init()
 
 	// サーバー起動
-	// mainServer()
+	mainServer()
 
-	DebugModel()
+	// DebugModel()
 }
 
 func DebugModel() {
