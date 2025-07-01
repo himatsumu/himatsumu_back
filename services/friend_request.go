@@ -56,7 +56,7 @@ func SendRequest(Sender_id string, Receiver_id string) Result {
 	if err != nil {
 		log.Println(err)
 		return Result{
-			Message: FriendRegistrationFailed,
+			Message: RequestRegistrationFailed,
 			Status:  http.StatusInternalServerError,
 			Data:    "",
 		}

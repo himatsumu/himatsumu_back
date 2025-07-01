@@ -109,6 +109,12 @@ type QuestHistory struct {
 	CreateAt   time.Time `gorm:"column:CREATE_AT;type:timestamp;not null"`
 }
 
+type QuestCheck struct {
+    UserUUID   string    `gorm:"primaryKey;column:USER_UUID;type:CHAR(36);not null"` // ユーザー固有識別子
+    FriendUUID string    `gorm:"column:FRIEND_UUID;type:CHAR(36);not null"`          // フレンド固有識別子
+    CreateAt   time.Time `gorm:"column:create_at;type:timestamp;not null"`            // 達成日時
+}
+
 // StoreType 店舗種別テーブル
 type StoreType struct {
 	StoType  int    `gorm:"primaryKey;column:STO_TYPE;type:INT;not null"`
