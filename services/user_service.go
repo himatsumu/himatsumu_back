@@ -36,7 +36,7 @@ func GetAuthenticatedData(c echo.Context) error {
 // ユーザー情報を返す
 func CheckUser(uuid string) (models.FindResult, error) {
 	// ユーザを取得する(なければいないことを返す)
-	result, err := models.GetUserByUUID(uuid)
+	result, err := models.CheckUser(uuid)
 	if err != nil {
 		fmt.Println("Database error:", err)
 		return models.FindResult{IsFind: false}, err
@@ -78,13 +78,17 @@ func Signup(req *SignupRequest, ctx echo.Context) (string, error) {
 	}
 
 	// UUIDの重複を確認
-	if _, err := models.GetUserByUUID(user_uuid); err != nil {
+	findUUID, _ := models.GetUserByUUID(user_uuid)
+	if findUUID.IsFind {
+		// ユーザーが見つかった場合（重複）
 		return "", custom_error.NewConflictError("UUIDが重複しています")
 	}
 
 	// UserIDの重複を確認
-	if _, err := models.GetUserByID(req.UserID); err != nil {
-		return "", custom_error.NewConflictError("UserIDが重複しています")
+	findId, _ := models.GetUserByID(req.UserID)
+	if findId.IsFind {
+		// ユーザーが見つかった場合（重複）
+		return "", custom_error.NewConflictError("UUIDが重複しています")
 	}
 
 	// DBにユーザー情報を保存
