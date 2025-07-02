@@ -20,7 +20,10 @@ func JWTAuthMiddleware(publicKey *rsa.PublicKey) echo.MiddlewareFunc {
 		return func(ctx echo.Context) error {
 			authHeader := ctx.Request().Header.Get("Authorization")
 			if authHeader == "" {
-				return ctx.JSON(http.StatusUnauthorized, map[string]string{"error": "Authorization header is required"})
+				return ctx.JSON(http.StatusUnauthorized, map[string]interface{}{
+					"status": http.StatusUnauthorized, 
+					"error": "Authorization header is required",
+				})
 			}
 			tokenString := strings.TrimPrefix(authHeader, "Bearer ")
 

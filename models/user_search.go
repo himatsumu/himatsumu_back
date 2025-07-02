@@ -29,7 +29,7 @@ func GetUserByID(uid string) (FindResult,error) {
 
 	//ユーザを取得する
 	// find_result := dbconn.Preload(clause.Associations).First(&fuser,&User{UserUUID: uid})
-	find_result := dbconn.Where(&User{UserUUID: uid}).Find(&fusers)
+	find_result := dbconn.Where(&User{UserID: uid}).Find(&fusers)
 
 	//見つからなかった時
 	if err := find_result.Error; errors.Is(err, gorm.ErrRecordNotFound) {

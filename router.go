@@ -31,10 +31,16 @@ func InitServer() *echo.Echo {
 	})
 
 	authGroup := server.Group("/auth", jwtMiddleware)
-	authGroup.GET("/", services.GetAuthenticatedData) // http://localhost:8888/auth/
+	{
+		authGroup.GET("/", services.GetAuthenticatedData) // http://localhost:8888/auth/
 
-	userGroup := authGroup.Group("/user")
-	userGroup.GET("/", controllers.CheckUser) // http://localhost:8888/auth/user/
+		userGroup := authGroup.Group("/user")
+		{
+			userGroup.GET("/", controllers.CheckUser) // http://localhost:8888/auth/user/
+
+			userGroup.POST("/signup", controllers.Signup) // http://localhost:8888/auth/user/signup/
+		}
+	}
 
 	return server
 }
