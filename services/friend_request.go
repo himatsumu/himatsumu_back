@@ -8,85 +8,85 @@ import (
 )
 
 // フレンド申請送信
-func SendRequest(Sender_id string, Receiver_id string) result {
+func SendRequest(Sender_id string, Receiver_id string) Result {
 	//同じユーザーの場合
 	if Sender_id == Receiver_id {
-		return result{
-			message: SameUser,
-			status:  http.StatusBadRequest,
-			data:    nil,
+		return Result{
+			Message: SameUser,
+			Status:  http.StatusBadRequest,
+			Data:    nil,
 		}
-	}	
+	}
 
 	//ユーザーが存在するかチェック
 	uresult1, err := models.GetUserByID(Sender_id)
 	uresult2, err := models.GetUserByID(Receiver_id)
 
 	if !uresult1.IsFind || !uresult2.IsFind {
-		return result{
-			message: UserNotFound,
-			status: http.StatusNotFound,
-			data: "",
+		return Result{
+			Message: UserNotFound,
+			Status:  http.StatusNotFound,
+			Data:    "",
 		}
 	}
 
 	//リクエストとフレンドであるか検索する
-	request, friend := models.IdRequestfound(Sender_id,Receiver_id)
+	request, friend := models.IdRequestfound(Sender_id, Receiver_id)
 
 	//既にリクエストが存在している場合
 	if request != 0 {
-		return result{
-			message: AlreadySent,
-			status: http.StatusBadRequest,
-			data: "",
+		return Result{
+			Message: AlreadySent,
+			Status:  http.StatusBadRequest,
+			Data:    "",
 		}
 	}
 
 	//既にフレンドである場合
 	if friend != 0 {
-		return result{
-			message: AlreadyFriends,
-			status: http.StatusBadRequest,
-			data: "",
+		return Result{
+			Message: AlreadyFriends,
+			Status:  http.StatusBadRequest,
+			Data:    "",
 		}
 	}
 	//データベースに書き込み
-	fuid ,err := models.SendFriendRequest(Sender_id, Receiver_id)
+	fuid, err := models.SendFriendRequest(Sender_id, Receiver_id)
 
 	if err != nil {
 		log.Println(err)
-		return result{
-			message: FriendRegistrationFailed,
-			status: http.StatusInternalServerError,
-			data: "",
+		return Result{
+			Message: FriendRegistrationFailed,
+			Status:  http.StatusInternalServerError,
+			Data:    "",
 		}
 	}
 
-	return result{
-		message: "",
-		status: http.StatusCreated,
-		data: fuid,
+	return Result{
+		Message: "",
+		Status:  http.StatusCreated,
+		Data:    fuid,
 	}
 }
 
-//フレンドリクエストの戻り値
+// フレンドリクエストの戻り値
 type FriendRequest struct {
-	ReqID       string
-	SenderId     string
-	ReceverId   string
+	ReqID      string
+	SenderId   string
+	ReceverId  string
 	SenderName string
 	ReqTime    time.Time
 }
 
 // 受信済み取得
-func GetRequest(Receiver_id string) (result) {
+func GetRequest(Receiver_id string) Result {
 	//引数をもとにリクエスト構造体を返す
-	requests,err := models.ReceivedRequest(Receiver_id)
+	requests, err := models.ReceivedRequest(Receiver_id)
 	if err != nil {
-		return  result{
-			message: RequestNotFound,
-			status: http.StatusNotFound,
-			data: "",
+		return Result{
+			Message: RequestNotFound,
+			Status:  http.StatusNotFound,
+			Data:    "",
 		}
 	}
 
@@ -99,10 +99,10 @@ func GetRequest(Receiver_id string) (result) {
 
 		//ユーザー情報取得に失敗
 		if err != nil {
-			return result{
-				message: UserInfoFailed,
-				status: http.StatusInternalServerError,
-				data: "",
+			return Result{
+				Message: UserInfoFailed,
+				Status:  http.StatusInternalServerError,
+				Data:    "",
 			}
 		}
 
@@ -115,55 +115,54 @@ func GetRequest(Receiver_id string) (result) {
 		})
 	}
 
-	log.Println("map",maps)
+	log.Println("map", maps)
 
-	return result{
-		message: "",
-		status: http.StatusOK,
-		data:    maps,
+	return Result{
+		Message: "",
+		Status:  http.StatusOK,
+		Data:    maps,
 	}
 }
 
-//リクエスト状態を変更する
-func ChangeRequestStatus(ruid string,ReceiverUUID string,status int)result{
+// リクエスト状態を変更する
+func ChangeRequestStatus(ruid string, ReceiverUUID string, Status int) Result {
 	//リクエストが存在しているか
 	request, err := models.IsRequest(ruid)
 
 	//リクエストでエラーならば
 	if err != nil || request.ReqStatus != 0 {
-		return result{
-			message: Incorrectrequesterror,
-			status: http.StatusBadRequest,
-			data: "",
+		return Result{
+			Message: Incorrectrequesterror,
+			Status:  http.StatusBadRequest,
+			Data:    "",
 		}
 	}
 
 	//受信者側が一致していない時
 	if request.ReceiverUUID != ReceiverUUID {
-		return result{
-			message: UserMismatchExisting,
-			status: http.StatusBadRequest,
-			data: "",
-		} 
+		return Result{
+			Message: UserMismatchExisting,
+			Status:  http.StatusBadRequest,
+			Data:    "",
+		}
 	}
 
 	//フレンドリクエストの状態を変更(statusはint)
-	err = models.ChangeRequestStatus(request,status)
+	err = models.ChangeRequestStatus(request, Status)
 
 	// エラーチェック
 	if err != nil {
 		log.Println(err)
-		return result{
-			message: UserMismatchExisting,
-			status: http.StatusInternalServerError,
-			data: "",
+		return Result{
+			Message: UserMismatchExisting,
+			Status:  http.StatusInternalServerError,
+			Data:    "",
 		}
 	}
 
-	return result{
-		message: "",
-		status: http.StatusOK,
-		data:    nil,
+	return Result{
+		Message: "",
+		Status:  http.StatusOK,
+		Data:    nil,
 	}
 }
-

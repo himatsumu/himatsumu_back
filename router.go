@@ -7,7 +7,6 @@ import (
 	"app/utils"
 	"log"
 	"net/http"
-
 	"github.com/labstack/echo"
 )
 
@@ -41,6 +40,7 @@ func InitServer() *echo.Echo {
 			userGroup.POST("/signup", controllers.Signup) // http://localhost:8888/auth/user/signup/
 		}
 	}
+
 
 	return server
 }

@@ -23,7 +23,7 @@ func GetAuthenticatedData(c echo.Context) error {
 
 	// レスポンスを作成
 	response := map[string]interface{}{
-		"message":      "You have accessed a protected endpoint!",
+		"Message":      "You have accessed a protected endpoint!",
 		"user_uuid":    claims.Subject,
 		"token_issuer": claims.Issuer,
 	}

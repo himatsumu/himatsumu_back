@@ -8,40 +8,40 @@ import (
 	"time"
 )
 
-//キャラクターの名前を生成
-func GenName()(result){
+// キャラクターの名前を生成
+func GenName() Result {
 	//JSONファイルを読み込む
-    data, err := ioutil.ReadFile("./configs/name.json")
-    if err != nil {
-		return result{
-			message: CouldNotGenerateName,
-			status:  http.StatusInternalServerError,
-			data:    "",
+	Data, err := ioutil.ReadFile("./configs/name.json")
+	if err != nil {
+		return Result{
+			Message: CouldNotGenerateName,
+			Status:  http.StatusInternalServerError,
+			Data:    "",
 		}
-    }
+	}
 
 	// ペットの名前を格納するスライス
-    var petNames []string
+	var petNames []string
 
-    // JSONデータをデコードする
-    err = json.Unmarshal(data, &petNames)
-    if err != nil {
-		return result{
-			message: CouldNotGenerateName,
-			status:  http.StatusInternalServerError,
-			data:    "",
+	// JSONデータをデコードする
+	err = json.Unmarshal(Data, &petNames)
+	if err != nil {
+		return Result{
+			Message: CouldNotGenerateName,
+			Status:  http.StatusInternalServerError,
+			Data:    "",
 		}
 	}
 
 	//ランダムシードを初期化
-    rand.Seed(time.Now().UnixNano())
+	rand.Seed(time.Now().UnixNano())
 
-    // 1から200の間でランダムな数字を生成
-    randomNumber := rand.Intn(len(petNames))
+	// 1から200の間でランダムな数字を生成
+	randomNumber := rand.Intn(len(petNames))
 
-	return result{
-		message: "",
-		status:  http.StatusOK,
-		data:    randomNumber,
+	return Result{
+		Message: "",
+		Status:  http.StatusOK,
+		Data:    randomNumber,
 	}
 }
