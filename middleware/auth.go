@@ -42,7 +42,10 @@ func JWTAuthMiddleware(publicKey *rsa.PublicKey) echo.MiddlewareFunc {
 				})
 			}
 			if !token.Valid {
-				return ctx.JSON(http.StatusUnauthorized, map[string]string{"error": "Token is not valid"})
+				return ctx.JSON(http.StatusUnauthorized, map[string]interface{}{
+					"status": http.StatusUnauthorized,
+					"message": "トークンの有効期限が切れています",
+				})
 			}
 
 			// クレームをEchoのコンテキストに保存
