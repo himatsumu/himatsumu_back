@@ -16,14 +16,15 @@ func GetAuthenticatedData(c echo.Context) error {
 	// ミドルウェアによってコンテキストに保存されたクレーム情報を取得
 	claims, ok := c.Get("claims").(*middleware.JWTClaims)
 	if !ok {
-		return c.JSON(http.StatusInternalServerError, map[string]string{
-			"error": "Could not retrieve user claims from context",
+		return c.JSON(http.StatusInternalServerError, map[string]interface{}{
+			"status": http.StatusInternalServerError,
+			"message": "Could not retrieve user claims from context",
 		})
 	}
 
 	// レスポンスを作成
 	response := map[string]interface{}{
-		"Message":      "You have accessed a protected endpoint!",
+		"message":      "認証に成功しました",
 		"user_uuid":    claims.Subject,
 		"token_issuer": claims.Issuer,
 	}

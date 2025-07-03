@@ -22,7 +22,7 @@ func JWTAuthMiddleware(publicKey *rsa.PublicKey) echo.MiddlewareFunc {
 			if authHeader == "" {
 				return ctx.JSON(http.StatusUnauthorized, map[string]interface{}{
 					"status": http.StatusUnauthorized, 
-					"error": "Authorization header is required",
+					"message": "認証情報がありません",
 				})
 			}
 			tokenString := strings.TrimPrefix(authHeader, "Bearer ")
@@ -36,10 +36,16 @@ func JWTAuthMiddleware(publicKey *rsa.PublicKey) echo.MiddlewareFunc {
 			})
 
 			if err != nil {
-				return ctx.JSON(http.StatusUnauthorized, map[string]string{"error": "Invalid token: " + err.Error()})
+				return ctx.JSON(http.StatusUnauthorized, map[string]interface{}{
+					"status": http.StatusUnauthorized,
+					"message": "認証情報が不正です",
+				})
 			}
 			if !token.Valid {
-				return ctx.JSON(http.StatusUnauthorized, map[string]string{"error": "Token is not valid"})
+				return ctx.JSON(http.StatusUnauthorized, map[string]interface{}{
+					"status": http.StatusUnauthorized,
+					"message": "トークンの有効期限が切れています",
+				})
 			}
 
 			// クレームをEchoのコンテキストに保存
