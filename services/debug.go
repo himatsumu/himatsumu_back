@@ -8,6 +8,10 @@ import (
 )
 
 func Debug(user []models.User) {
+	//キャラクターを作るサンプル
+	chara,err :=models.CreateCharacter()
+	log.Println(chara)
+
 	log.Println(user[0].UserUUID, user[1].UserUUID)
 	// フレンド申請送信1
 	result1 := SendRequest(user[0].UserUUID, user[1].UserUUID)
@@ -58,13 +62,15 @@ func Debug(user []models.User) {
 
 	maps2 := result5.Data.(Data)
 
+	log.Println(maps[1].ReceverId)
+	log.Println(user[3].UserUUID)
 	//クエストクリア
-	err := models.QuestRegister(maps[1].ReceverId,maps2.friendId)
+	err = models.QuestCompleted(maps[1].ReceverId,maps2.friendId)
 	if err != nil {
 		log.Println(err)
 	}
 
-	err = models.QuestRegister(user[1].UserUUID,maps2.friendId)
+	err = models.QuestCompleted(user[3].UserUUID,maps2.friendId)
 	if err != nil {
 		log.Println(err)
 	}

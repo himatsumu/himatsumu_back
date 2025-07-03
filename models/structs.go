@@ -39,14 +39,12 @@ type FriendReq struct {
 	ReqCreateAt  time.Time `gorm:"column:REQ_CREATE_AT;type:timestamp;not null"`
 }
 
-
 // CharaType キャラクター種別テーブル
 type CharaType struct {
 	CharaType  int         `gorm:"primaryKey;column:CHARA_TYPE;type:INT;not null"`
-	TypeStage  int         `gorm:"column:TYPE_STAGE;type:INT;not null;uniqueIndex:idx_chara_type_stage"`
+	TypeStage  int         `gorm:"primaryKey;column:TYPE_STAGE;type:INT;not null;"`
 	TypeName   string      `gorm:"column:TYPE_NAME;type:VARCHAR(20);not null"`
 	ImageURL   string      `gorm:"column:IMAGE_URL;type:VARCHAR(50);not null"`
-	Characters []Character `gorm:"foreignKey:CharaType;references:CharaType"`
 }
 
 // Character キャラクターテーブル

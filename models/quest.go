@@ -1,11 +1,12 @@
 package models
 
 import (
+	"app/utils"
 	"time"
 )
 
 // クエスト達成処理
-func QuestRegister(UserId string, FriendId string) error {
+func QuestCompleted(UserId string, FriendId string) error {
 	quest := QuestCheck{
 		UserUUID:   UserId,
 		FriendUUID: FriendId,
@@ -39,3 +40,30 @@ func QuestCount(frienduuid string) (int64, error) {
 	}
 	return count ,nil
 }
+
+
+//完了済みのQuestHistoryテーブルに登録
+func QuestsRecorded(frienduuid string)(string,error){
+
+	uuid,err := utils.Genid()
+	if err != nil {
+		return "",err
+	}
+
+	history := QuestHistory{
+		QuestUUID:  uuid,
+		FriendUUID: frienduuid,
+		StoreName:  "",
+		StoreLoca:  "",
+		StoType:    0,
+		Possible:   0,
+		CreateAt:   time.Time{},
+	}
+
+	//データベースに書き込む
+	if err := dbconn.Create(&history).Error; err != nil {
+        return "",err // エラー処理を追加
+    }
+	
+	return uuid,nil
+}	

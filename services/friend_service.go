@@ -58,6 +58,7 @@ func FriendRecord(ruid string, Sender_id string, Receiver_id string) Result {
 	//キャラクター登録
 	charaId, err := RegisterCharacter(friendId)
 	if err != nil {
+		log.Println(err)
 		return Result{
 			Message: CharacterNotRegistration,
 			Status:  http.StatusInternalServerError,

@@ -27,7 +27,7 @@ func QuestRegister(userPoint Point,goalPoint Point,friendId string,userUuid stri
 		}
 	}
 
-    err := models.QuestRegister(friendId,userUuid)
+    err := models.QuestCompleted(friendId,userUuid)
 	
 	if err != nil {
 		return Result{
@@ -76,7 +76,7 @@ func IsQuest(frienduuid string) Result {
 		}
 	}
 
-
+	
 	return Result{
 		Message: "",
 		Status:  http.StatusOK,
