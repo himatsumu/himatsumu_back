@@ -26,7 +26,7 @@ func QuestRegister(userPoint Point,goalPoint Point,friendId string,userUuid stri
 			Data:    dist,
 		}
 	}
-
+	//クエストチェックテーブルに完了したことを登録
     err := models.QuestCompleted(friendId,userUuid)
 	
 	if err != nil {
@@ -55,7 +55,7 @@ func GetDistance(point1 Point, point2 Point) int64 {
 	return int64(dist)
 }
 
-// クエストが2人とも達成しているか
+// クエストが2人とも達成しているか()
 func IsQuest(frienduuid string) Result {
 
 	QuestCount,err := models.QuestCount(frienduuid)
@@ -75,6 +75,8 @@ func IsQuest(frienduuid string) Result {
 			Data:    nil,
 		}
 	}
+
+	//ここにmodelsでhistoryの更新を呼びだす
 
 	
 	return Result{

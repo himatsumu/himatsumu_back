@@ -5,6 +5,7 @@ import (
 	"time"
 )
 
+
 // クエスト達成処理
 func QuestCompleted(UserId string, FriendId string) error {
 	quest := QuestCheck{
@@ -42,9 +43,10 @@ func QuestCount(frienduuid string) (int64, error) {
 }
 
 
-//完了済みのQuestHistoryテーブルに登録
+//完了済みのQuestHistoryテーブルに登録(ここupdateにする)
 func QuestsRecorded(frienduuid string)(string,error){
 
+	//uuid生成
 	uuid,err := utils.Genid()
 	if err != nil {
 		return "",err

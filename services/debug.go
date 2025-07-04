@@ -64,6 +64,7 @@ func Debug(user []models.User) {
 
 	log.Println(maps[1].ReceverId)
 	log.Println(user[3].UserUUID)
+	
 	//クエストクリア
 	err = models.QuestCompleted(maps[1].ReceverId,maps2.friendId)
 	if err != nil {
