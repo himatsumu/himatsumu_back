@@ -29,6 +29,7 @@ type Friend struct {
 	MeetHis     []MeetHistory  `gorm:"foreignKey:FriendUUID;references:FriendUUID"`
 }
 
+
 // FriendReq フレンドリクエストテーブル
 type FriendReq struct {
 	FreReqUUID   string    `gorm:"primaryKey;column:FRE_REQ_UUID;type:CHAR(36);not null"`

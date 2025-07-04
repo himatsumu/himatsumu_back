@@ -9,6 +9,7 @@ type returnUser struct {
 	Id    string      `json:"id"`
 	Name  string      `json:"name"`
 }
+
 // 名前を元にユーザー検索
 func GetUsersByName(name string) Result {
 
