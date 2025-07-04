@@ -44,6 +44,7 @@ func autoMigrate() error {
 		&Costume{},
 		&OwnCostume{},
 		&QuestHistory{},
+		&QuestCheck{},
 		&StoreType{},
 		&MeetHistory{},
 		&Picture{},

@@ -3,8 +3,9 @@ package models
 import (
 	"app/utils"
 	"errors"
-	"time"
+	"log"
 	"math/rand"
+	"time"
 )
 
 //キャラクター作成
@@ -16,8 +17,9 @@ func RegisterCharacter(frienfId string)(string,error) {
 	}
 
 	//キャラクター生成(キャラクターの数)
-	randomInt := rand.Intn(4)
+	randomInt := rand.Intn(3)
 
+	log.Println("randomu",randomInt)
 	//トークン生成
 	Rtoken := Character{
 		CharaUUID:  fuid,

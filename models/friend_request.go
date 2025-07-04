@@ -57,14 +57,14 @@ func IsRequest(uuid string) (FriendReq, error) {
 //フレンド申請を登録
 func SendFriendRequest(Sender_id string,Receiver_id string)(string,error) {
 	//uuid生成
-	suid, err := utils.Genid()
+	requid, err := utils.Genid()
 	if err != nil {
 		return"", errors.New("uuid generation error")
 	}
 
 	//センドトークンの情報
 	Stoken := FriendReq{
-		FreReqUUID:   suid,        //リクエストの識別子
+		FreReqUUID:   requid,        //リクエストの識別子
 		SenderUUID:   Sender_id,   //送った側のID
 		ReceiverUUID: Receiver_id, //受け取る側のID
 		ReqStatus:    0,           ////0:未承認、1:承認、2:拒否、3:取り消し
@@ -77,5 +77,5 @@ func SendFriendRequest(Sender_id string,Receiver_id string)(string,error) {
         return "",err // エラー処理を追加
     }
 
-	return suid,nil
+	return requid,nil
 }

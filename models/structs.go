@@ -40,14 +40,12 @@ type FriendReq struct {
 	ReqCreateAt  time.Time `gorm:"column:REQ_CREATE_AT;type:timestamp;not null"`
 }
 
-
 // CharaType キャラクター種別テーブル
 type CharaType struct {
 	CharaType  int         `gorm:"primaryKey;column:CHARA_TYPE;type:INT;not null"`
-	TypeStage  int         `gorm:"column:TYPE_STAGE;type:INT;not null;uniqueIndex:idx_chara_type_stage"`
+	TypeStage  int         `gorm:"primaryKey;column:TYPE_STAGE;type:INT;not null;"`
 	TypeName   string      `gorm:"column:TYPE_NAME;type:VARCHAR(20);not null"`
 	ImageURL   string      `gorm:"column:IMAGE_URL;type:VARCHAR(50);not null"`
-	Characters []Character `gorm:"foreignKey:CharaType;references:CharaType"`
 }
 
 // Character キャラクターテーブル
@@ -108,6 +106,12 @@ type QuestHistory struct {
 	StoType    int       `gorm:"column:STO_TYPE;type:INT;not null"`
 	Possible   int       `gorm:"column:POSSIBLE;type:INT;not null;default:1"`
 	CreateAt   time.Time `gorm:"column:CREATE_AT;type:timestamp;not null"`
+}
+
+type QuestCheck struct {
+    UserUUID   string    `gorm:"primaryKey;column:USER_UUID;type:CHAR(36);not null"` // ユーザー固有識別子
+    FriendUUID string    `gorm:"column:FRIEND_UUID;type:CHAR(36);not null"`          // フレンド固有識別子
+    CreateAt   time.Time `gorm:"column:create_at;type:timestamp;not null"`            // 達成日時
 }
 
 // StoreType 店舗種別テーブル

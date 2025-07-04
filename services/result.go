@@ -19,10 +19,12 @@ const (
 	AlreadyFriends           = "既にフレンドです"
 	UserNotFound             = "ユーザーが見つかりませんでした"
 	FriendRegistrationFailed = "フレンドを登録できませんでした"
+	RequestRegistrationFailed= "リクエストを送信できませんでした"
 	RequestNotFound          = "リクエストが存在しませんでした"
 	UserInfoFailed           = "ユーザー情報取得に失敗しました"
 	Incorrectrequesterror    = "フレンドリクエストが無効です"
 	UserMismatchExisting     = "ユーザーが一致していません"
 	CharacterNotRegistration = "キャラクターを生成できませんでした"
 	CouldNotGenerateName     = "名前を生成できませんでした"
+	QuestNotCompleted        = "クエストを達成できていません"
 )

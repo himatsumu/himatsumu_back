@@ -2,6 +2,7 @@ package services
 
 import (
 	"app/models"
+	"log"
 	"net/http"
 )
 
@@ -19,7 +20,7 @@ func FriendRecord(ruid string, Sender_id string, Receiver_id string) Result {
 		return Result{
 			Message: RequestNotFound,
 			Status:  http.StatusNotFound,
-			Data:    "",
+			Data:    Data{},
 		}
 	}
 
@@ -28,37 +29,40 @@ func FriendRecord(ruid string, Sender_id string, Receiver_id string) Result {
 		return Result{
 			Message: UserMismatchExisting,
 			Status:  http.StatusBadRequest,
-			Data:    "",
+			Data:    Data{},
 		}
 	}
 
 	//フレンドテーブルに登録
-	friendId, err := models.FriendRecord(Receiver_id, Sender_id)
+	friendId, err := models.FriendRecord(Sender_id,Receiver_id)
 	if err != nil {
+		log.Println(err)
 		return Result{
 			Message: FriendRegistrationFailed,
 			Status:  http.StatusInternalServerError,
-			Data:    "",
+			Data:    Data{},
 		}
 	}
 
 	//フレンドリクエストテーブルの状態変更
 	err = models.ChangeRequestStatus(request, accept)
 	if err != nil {
+		log.Println(err)
 		return Result{
 			Message: FriendRegistrationFailed,
 			Status:  http.StatusInternalServerError,
-			Data:    "",
+			Data:    Data{},
 		}
 	}
 
 	//キャラクター登録
 	charaId, err := RegisterCharacter(friendId)
 	if err != nil {
+		log.Println(err)
 		return Result{
 			Message: CharacterNotRegistration,
 			Status:  http.StatusInternalServerError,
-			Data:    "",
+			Data:    Data{},
 		}
 	}
 
