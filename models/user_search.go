@@ -5,7 +5,6 @@ import (
 	"errors"
 
 	"gorm.io/gorm"
-	"gorm.io/gorm/clause"
 )
 
 // 検索結果
@@ -29,7 +28,6 @@ func GetUserByID(uid string) (FindResult, error) {
 	}
 
 	//ユーザを取得する
-	// find_result := dbconn.Preload(clause.Associations).First(&fuser,&User{UserUUID: uid})
 	find_result := dbconn.Where(&User{UserID: uid}).First(&fusers)
 
 	//見つからなかった時
@@ -46,7 +44,7 @@ func GetUserByID(uid string) (FindResult, error) {
 	return result, nil
 }
 
-// ユーザーIDを元にユーザーデータを返す
+// ユーザーUUIDを元にユーザーデータを返す
 func GetUserByUUID(uid string) (FindResult, error) {
 
 	//空のユーザを作成
@@ -61,7 +59,6 @@ func GetUserByUUID(uid string) (FindResult, error) {
 	}
 
 	//ユーザを取得する
-	// find_result := dbconn.Preload(clause.Associations).First(&fuser,&User{UserUUID: uid})
 	find_result := dbconn.Where(&User{UserUUID: uid}).First(&fusers)
 
 	//見つからなかった時
@@ -92,9 +89,9 @@ func GetUserByName(uname string) (FindResult, error) {
 	}
 
 	//ユーザを取得する
-	find_result := dbconn.Preload(clause.Associations).First(&fuser, &User{UserName: uname})
+	find_result := dbconn.Where(&User{UserName: uname}).First(&fuser)
 
-	//見つからなかった時
+	//見つからなかった時 - エラーではなく、IsFind: falseで返す
 	if err := find_result.Error; errors.Is(err, gorm.ErrRecordNotFound) {
 		return result, gorm.ErrRecordNotFound
 	}
@@ -116,7 +113,7 @@ func CheckUser(uuid string) (FindResult, error) {
 	result := FindResult{IsFind: false}
 
 	//ユーザを取得する
-	find_result := dbconn.Preload(clause.Associations).First(&fuser, &User{UserUUID: uuid})
+	find_result := dbconn.Where(&User{UserUUID: uuid}).First(&fuser)
 
 	//見つからなかった時 - エラーではなく、IsFind: falseで返す
 	if err := find_result.Error; errors.Is(err, gorm.ErrRecordNotFound) {
