@@ -39,8 +39,15 @@ func InitServer() *echo.Echo {
 
 			userGroup.POST("/signup", controllers.Signup) // http://localhost:8888/auth/user/signup/
 		}
+
+		costumeGroup := authGroup.Group("/costume")
+		{
+			costumeGroup.GET("/:cos_uuid", controllers.GetCostume) // http://localhost:8888/auth/costume/
+		}
 	}
+<<<<<<< Updated upstream
 
-
+=======
+>>>>>>> Stashed changes
 	return server
 }
