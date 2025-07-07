@@ -11,20 +11,20 @@ import (
 
 func main() {
 
-	// 環境変数読み込み
-	// Init()
+	//環境変数読み込み
+	Init()
 
-	// // 公開鍵を保存
-	// if err := savePublicKeyFromEnv(); err != nil {
-	// 	log.Fatal(err)
-	// }
+	// 公開鍵を保存
+	if err := savePublicKeyFromEnv(); err != nil {
+		log.Fatal(err)
+	}
 
 	// モデル初期化
 	err := models.Init()
 	log.Println("err",err)
 	// サーバー起動
-	//mainServer()
-	DebugModel()
+	mainServer()
+	// DebugModel()
 }
 
 func DebugModel() {

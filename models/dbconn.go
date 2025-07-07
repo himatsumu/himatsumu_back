@@ -51,7 +51,7 @@ func autoMigrate() error {
 	}
 
 	// 既存のテーブルを削除
-	ReseTable(models)
+	//ReseTable(models)
 
 	// トランザクションでマイグレーションを実行
 	err := dbconn.Transaction(func(tx *gorm.DB) error {

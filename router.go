@@ -3,10 +3,10 @@ package main
 import (
 	"app/controllers"
 	"app/middleware"
-	"app/services"
 	"app/utils"
 	"log"
 	"net/http"
+
 	"github.com/labstack/echo"
 )
 
@@ -31,7 +31,6 @@ func InitServer() *echo.Echo {
 
 	authGroup := server.Group("/auth", jwtMiddleware)
 	{
-		authGroup.GET("/", services.GetAuthenticatedData) // http://localhost:8888/auth/
 
 		userGroup := authGroup.Group("/user")
 		{
@@ -40,7 +39,6 @@ func InitServer() *echo.Echo {
 			userGroup.POST("/signup", controllers.Signup) // http://localhost:8888/auth/user/signup/
 		}
 	}
-
 
 	return server
 }

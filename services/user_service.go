@@ -2,37 +2,12 @@ package services
 
 import (
 	"app/custom_error"
-	"app/middleware"
 	"app/models"
 	"fmt"
-	"net/http"
 	"time"
 
 	"github.com/labstack/echo"
 )
-
-// 認証済みユーザーの情報を返す
-func GetAuthenticatedData(c echo.Context) error {
-	// ミドルウェアによってコンテキストに保存されたクレーム情報を取得
-	claims, ok := c.Get("claims").(*middleware.JWTClaims)
-	if !ok {
-		return c.JSON(http.StatusInternalServerError, map[string]interface{}{
-			"status": http.StatusInternalServerError,
-			"message": "Could not retrieve user claims from context",
-		})
-	}
-
-	// レスポンスを作成
-	response := map[string]interface{}{
-		"message":      "認証に成功しました",
-		"user_uuid":    claims.Subject,
-		"token_issuer": claims.Issuer,
-	}
-
-	fmt.Println(response)
-	// c.JSON() を使ってJSONレスポンスを返す
-	return c.JSON(http.StatusOK, response)
-}
 
 // ユーザー情報を返す
 func CheckUser(uuid string) (models.FindResult, error) {
