@@ -23,8 +23,8 @@ func main() {
 	err := models.Init()
 	log.Println("err",err)
 	// サーバー起動
-	//mainServer()
-	DebugModel()
+	mainServer()
+	// DebugModel()
 }
 
 func DebugModel() {

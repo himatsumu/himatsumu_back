@@ -12,6 +12,14 @@ type returnUser struct {
 
 // 名前を元にユーザー検索
 func GetUsersByName(name string) Result {
+	
+	if name == "" {
+		return Result{
+			Message: UserNotFound,
+			Status:  http.StatusBadRequest,
+			Data:    nil,
+		}
+	}
 
 	results, err := models.GetUserByName(name)
 
@@ -35,7 +43,14 @@ func GetUsersByName(name string) Result {
 
 // 名前を元にユーザー検索
 func GetUsersById(id string) Result {
-
+	
+	if id == "" {
+		return Result{
+			Message: UserNotFound,
+			Status:  http.StatusBadRequest,
+			Data:    nil,
+		}
+	}
 	results, err := models.GetUserByID(id)
 
 	if err != nil {

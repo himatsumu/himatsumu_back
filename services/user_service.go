@@ -31,7 +31,7 @@ func GetAuthenticatedData(c echo.Context) error {
 
 	fmt.Println(response)
 	// c.JSON() を使ってJSONレスポンスを返す
-	return c.JSON(http.StatusOK, response)
+	return c.JSON(http.StatusOK,response)
 }
 
 // ユーザー情報を返す

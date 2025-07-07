@@ -38,7 +38,18 @@ func InitServer() *echo.Echo {
 			userGroup.GET("/", controllers.CheckUser) // http://localhost:8888/auth/user/
 
 			userGroup.POST("/signup", controllers.Signup) // http://localhost:8888/auth/user/signup/
+
+			userGroup.GET("/:userId", controllers.GetUsersById) // http://localhost:8888/auth/user/:userId
+
 		}
+		friendGroup := authGroup.Group("/friend")
+		{
+			friendGroup.POST("request",controllers.SendRequest) // http://localhost:8888/auth/friend/request
+
+			friendGroup.GET("/:userId",controllers.GetRequest) // http://localhost:8888/auth/friend/:userId
+
+		}
+
 	}
 
 

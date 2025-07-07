@@ -27,4 +27,6 @@ const (
 	CharacterNotRegistration = "キャラクターを生成できませんでした"
 	CouldNotGenerateName     = "名前を生成できませんでした"
 	QuestNotCompleted        = "クエストを達成できていません"
+
+	InvalidRequestFormat = "リクエストの形式が不正です"
 )
