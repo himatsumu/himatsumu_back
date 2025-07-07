@@ -45,9 +45,5 @@ func InitServer() *echo.Echo {
 			costumeGroup.GET("/:cos_uuid", controllers.GetCostume) // http://localhost:8888/auth/costume/
 		}
 	}
-<<<<<<< Updated upstream
-
-=======
->>>>>>> Stashed changes
 	return server
 }
