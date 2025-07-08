@@ -27,4 +27,9 @@ const (
 	CharacterNotRegistration = "キャラクターを生成できませんでした"
 	CouldNotGenerateName     = "名前を生成できませんでした"
 	QuestNotCompleted        = "クエストを達成できていません"
+	EmptyUUID                = "UUIDが空です"
+	EmptyInfo                = "必要な情報が空です"
+	InvalidDateTime          = "日付の形式が不正です"
+	AlreadyUUID              = "UUIDが重複しています"
+	UnexpectedError          = "予期しないエラーが発生しました"
 )

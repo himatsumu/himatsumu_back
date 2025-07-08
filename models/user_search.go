@@ -113,6 +113,7 @@ func CheckUser(uuid string) (FindResult, error) {
 	result := FindResult{IsFind: false}
 
 	//ユーザを取得する
+	//find_result := dbconn.Raw("SELECT * FROM users WHERE user_uuid = ? LIMIT 1", 0).Scan(&fuser)
 	find_result := dbconn.Where(&User{UserUUID: uuid}).First(&fuser)
 
 	//見つからなかった時 - エラーではなく、IsFind: falseで返す
