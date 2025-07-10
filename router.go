@@ -4,6 +4,7 @@ import (
 	"app/controllers"
 	"app/middleware"
 	"app/utils"
+	"app/mocks"
 	"log"
 	"net/http"
 
@@ -38,6 +39,36 @@ func InitServer() *echo.Echo {
 
 			userGroup.POST("/signup", controllers.Signup) // http://localhost:8888/auth/user/signup/
 		}
+	}
+
+	//モックサーバーのエンドポイント
+	mockGroup := server.Group("/mock")
+	{
+		mockGroup.GET("/", func(ctx echo.Context) error {
+			return ctx.JSON(http.StatusOK, "This is mock endpoint.")
+		})
+
+		//モックのユーザーグループ
+		//mUserGroup := mockGroup.Group("/user")
+		{
+
+		}
+
+		//モックのフレンドグループ
+		mFriendGroup := mockGroup.Group("/friend")
+		{
+			//フレンド一覧
+			mFriendGroup.GET("/", mocks.MockGetFriends)			// http://localhost:8888/mock/friend/
+
+			//フレンド情報
+			mFriendGroup.GET("/:id", mocks.MockGetFriendById)	// http://localhost:8888/mock/friend/ayaka
+		}
+
+		mQuestGroup := mockGroup.Group("/quest")
+		{
+			mQuestGroup.GET("/", mocks.MockGetQuests)			// http://localhost:8888/mock/quest/
+		}
+
 	}
 
 	return server
