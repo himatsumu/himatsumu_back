@@ -79,7 +79,7 @@ func Signup(req *SignupRequest, ctx echo.Context) (string, error) {
 	}
 
 	// UUIDの重複を確認
-	findUUID, _ := models.GetUserByUUID(user_uuid)
+	findUUID, _ := models.GetUserByUuid(user_uuid)
 	if findUUID.IsFind {
 		// ユーザーが見つかった場合（重複）
 		return "", custom_error.NewConflictError("UUIDが重複しています")

@@ -7,7 +7,7 @@ import (
 )
 
 //リクエストの存在チェック
-func IdRequestfound(Sender_id string, Receiver_id string)(int64,int64) {
+func IdRequestfound(Sender_id string, Receiver_id string)(int64,FriendReq,int64) {
 	//ネームトークンフィルター
 	Sent_filter := FriendReq{}
 	Friend_filter := Friend{}
@@ -17,7 +17,7 @@ func IdRequestfound(Sender_id string, Receiver_id string)(int64,int64) {
 	//既にフレンドなら1、フレンドでなかったら0を代入(and)
 	friend := dbconn.Where(Friend{UserUUID1: Sender_id, UserUUID2: Receiver_id}).Or(Friend{UserUUID1: Receiver_id, UserUUID2: Sender_id}).First(&Friend_filter).RowsAffected
 	
-	return request,friend
+	return request,Sent_filter ,friend
 }
 
 //送信者IDからリクエスト構造体を返す
@@ -43,7 +43,7 @@ func IsRequest(uuid string) (FriendReq, error) {
 	}
 
 	//識別子が存在しているか
-	result := dbconn.Where(FriendReq{FreReqUUID:uuid}).First(&request)
+	result := dbconn.Where(FriendReq{FreReqUUID:uuid,ReqStatus: 0}).First(&request)
 
 	//エラーの時
 	if result.Error != nil {

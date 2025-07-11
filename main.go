@@ -14,10 +14,10 @@ func main() {
 	// 環境変数読み込み
 	// Init()
 
-	// // 公開鍵を保存
-	// if err := savePublicKeyFromEnv(); err != nil {
-	// 	log.Fatal(err)
-	// }
+	// 公開鍵を保存
+	if err := savePublicKeyFromEnv(); err != nil {
+		log.Fatal(err)
+	}
 
 	// モデル初期化
 	err := models.Init()

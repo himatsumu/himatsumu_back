@@ -6,6 +6,7 @@ import (
 )
 
 type returnUser struct {
+	Uuid  string      `json:"uuid"`
 	Id    string      `json:"id"`
 	Name  string      `json:"name"`
 }
@@ -35,6 +36,7 @@ func GetUsersByName(name string) Result {
 		Message: "",
 		Status:  http.StatusOK,
 		Data:    returnUser{
+			Uuid: results.UserData.UserUUID,
 			Id:   results.UserData.UserID,
 			Name: results.UserData.UserName,
 		},
@@ -65,6 +67,7 @@ func GetUsersById(id string) Result {
 		Message: "",
 		Status:  http.StatusOK,
 		Data:    returnUser{
+			Uuid: results.UserData.UserUUID,
 			Id:   results.UserData.UserID,
 			Name: results.UserData.UserName,
 		},

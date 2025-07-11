@@ -33,6 +33,7 @@ func InitServer() *echo.Echo {
 	{
 		authGroup.GET("/", services.GetAuthenticatedData) // http://localhost:8888/auth/
 
+		//ユーザー
 		userGroup := authGroup.Group("/user")
 		{
 			userGroup.GET("/", controllers.CheckUser) // http://localhost:8888/auth/user/
@@ -42,13 +43,44 @@ func InitServer() *echo.Echo {
 			userGroup.GET("/:userId", controllers.GetUsersById) // http://localhost:8888/auth/user/:userId
 
 		}
+
+		//リクエスト
+		requestGroup := authGroup.Group("/request")
+		{
+			//フレンド申請送信
+			requestGroup.POST("/send",controllers.SendRequest) // http://localhost:8888/auth/request/send
+			//フレンド申請受信
+			requestGroup.GET("/:userId",controllers.GetRequest) // http://localhost:8888/auth/request/:userId
+			//フレンド登録
+			requestGroup.POST("/register",controllers.RegisterFriend)// http://localhost:8888/auth/request/register
+		}
+
+		//フレンド
 		friendGroup := authGroup.Group("/friend")
 		{
-			friendGroup.POST("request",controllers.SendRequest) // http://localhost:8888/auth/friend/request
-
-			friendGroup.GET("/:userId",controllers.GetRequest) // http://localhost:8888/auth/friend/:userId
-
+			//フレンド一覧検索
+			friendGroup.GET("/:userId",controllers.GetFriends)// http://localhost:8888/auth/friend/:userId
 		}
+
+		//キャラクター
+		characterGroup := authGroup.Group("/character")
+		{
+			_= characterGroup
+		}
+
+		//クエスト
+		questGroup := authGroup.Group("/quest")
+		{
+			_=questGroup
+		}
+
+		//アルバム
+		albumGroup := authGroup.Group("/album")
+		{
+			_=albumGroup
+		}
+
+
 
 	}
 

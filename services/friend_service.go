@@ -77,8 +77,8 @@ func FriendRecord(ruid string, Sender_id string, Receiver_id string) Result {
 }
 
 // フレンド一覧取得
-func GetFriends(uid string) Result {
-	getFriends, err := models.GetUserByID(uid)
+func GetFriendsByUuid(uid string) Result {
+	getFriends, err := models.GetUserByUuid(uid)
 	if err != nil {
 		return Result{
 			Message: UserNotFound,
@@ -87,6 +87,24 @@ func GetFriends(uid string) Result {
 		}
 	}
 
+	return Result{
+		Message: "",
+		Status:  http.StatusOK,
+		Data:    getFriends,
+	}
+}
+
+// フレンド一覧取得
+func GetFriendsByid(uid string) Result {
+	getFriends, err := models.GetUserByID(uid)
+	if err != nil {
+		return Result{
+			Message: UserNotFound,
+			Status:  http.StatusNotFound,
+			Data:    nil,
+		}
+	}
+	
 	return Result{
 		Message: "",
 		Status:  http.StatusOK,
