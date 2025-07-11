@@ -54,7 +54,7 @@ func Debug(user []models.User) {
 	log.Println("承認", result5.Data)
 
 	//受信済み取得
-	result6 := GetFriends(user[1].UserUUID)
+	result6 := GetFriendsByUuid(user[1].UserUUID)
 	if result6.Status != 200 {
 		log.Println(result6.Message)
 	}

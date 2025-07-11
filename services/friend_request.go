@@ -19,8 +19,8 @@ func SendRequest(Sender_id string, Receiver_id string) Result {
 	}
 
 	//ユーザーが存在するかチェック
-	uresult1, err := models.GetUserByID(Sender_id)
-	uresult2, err := models.GetUserByID(Receiver_id)
+	uresult1, err := models.GetUserByUuid(Sender_id)
+	uresult2, err := models.GetUserByUuid(Receiver_id)
 
 	if !uresult1.IsFind || !uresult2.IsFind {
 		return Result{
@@ -31,15 +31,27 @@ func SendRequest(Sender_id string, Receiver_id string) Result {
 	}
 
 	//リクエストとフレンドであるか検索する
-	request, friend := models.IdRequestfound(Sender_id, Receiver_id)
+	request,Sent_filter, friend := models.IdRequestfound(Sender_id, Receiver_id)
 
 	//既にリクエストが存在している場合
 	if request != 0 {
-		return Result{
-			Message: AlreadySent,
-			Status:  http.StatusBadRequest,
-			Data:    "",
+		if Sent_filter.ReqStatus == 0 {
+			return Result{
+				Message: AlreadySent,
+				Status:  http.StatusBadRequest,
+				Data:    "",
+			}
 		}
+		//リクエストステータスだけ変更
+		err := models.ChangeRequestStatus(Sent_filter,0)
+		if err != nil {
+			return Result{
+				Message: RequestRegistrationFailed,
+				Status:  http.StatusInternalServerError,
+				Data:    "",
+			}
+		}
+
 	}
 
 	//既にフレンドである場合
@@ -50,6 +62,7 @@ func SendRequest(Sender_id string, Receiver_id string) Result {
 			Data:    "",
 		}
 	}
+
 	//データベースに書き込み
 	fuid, err := models.SendFriendRequest(Sender_id, Receiver_id)
 
@@ -95,7 +108,7 @@ func GetRequest(Receiver_id string) Result {
 
 	for _, request := range requests {
 		//IDを元に送信者側の情報取得
-		sender, err := models.GetUserByID(request.SenderUUID)
+		sender, err := models.GetUserByUuid(request.SenderUUID)
 
 		//ユーザー情報取得に失敗
 		if err != nil {

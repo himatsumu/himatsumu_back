@@ -34,7 +34,6 @@ func GetUserByID(uid string) (FindResult, error) {
 	if err := find_result.Error; errors.Is(err, gorm.ErrRecordNotFound) {
 		return result, gorm.ErrRecordNotFound
 	}
-
 	//見つかった時
 	result.IsFind = true
 
@@ -45,7 +44,7 @@ func GetUserByID(uid string) (FindResult, error) {
 }
 
 // ユーザーUUIDを元にユーザーデータを返す
-func GetUserByUUID(uid string) (FindResult, error) {
+func GetUserByUuid(uid string) (FindResult, error) {
 
 	//空のユーザを作成
 	fusers := User{}
