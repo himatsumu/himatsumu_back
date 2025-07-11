@@ -33,6 +33,9 @@ func FriendRecord(ruid string, Sender_id string, Receiver_id string) Result {
 		}
 	}
 
+	//既にフレンドの場合
+	log.Print("request",request)
+
 	//フレンドテーブルに登録
 	friendId, err := models.FriendRecord(Sender_id,Receiver_id)
 	if err != nil {

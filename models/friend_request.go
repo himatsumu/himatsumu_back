@@ -43,7 +43,7 @@ func IsRequest(uuid string) (FriendReq, error) {
 	}
 
 	//識別子が存在しているか
-	result := dbconn.Where(FriendReq{FreReqUUID:uuid,ReqStatus: 0}).First(&request)
+	result := dbconn.Where("FRE_REQ_UUID = ? AND REQ_STATUS = ?",uuid,0).First(&request)
 
 	//エラーの時
 	if result.Error != nil {
