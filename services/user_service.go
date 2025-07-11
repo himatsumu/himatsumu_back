@@ -1,15 +1,16 @@
 package services
 
 import (
+	"app/middleware"
 	"app/models"
 	"fmt"
 	"time"
 
 	"net/http"
+
+	"github.com/labstack/echo"
 )
 
-<<<<<<< HEAD
-=======
 // 認証済みユーザーの情報を返す
 func GetAuthenticatedData(c echo.Context) error {
 	// ミドルウェアによってコンテキストに保存されたクレーム情報を取得
@@ -33,7 +34,6 @@ func GetAuthenticatedData(c echo.Context) error {
 	return c.JSON(http.StatusOK,response)
 }
 
->>>>>>> controller
 // ユーザー情報を返す
 func CheckUser(uuid string) Result {
 	// UUIDが空か確認
@@ -102,11 +102,7 @@ func Signup(req *SignupRequest, uuid string) Result {
 	}
 
 	// UUIDの重複を確認
-<<<<<<< HEAD
-	findUUID, _ := models.GetUserByUUID(uuid)
-=======
-	findUUID, _ := models.GetUserByUuid(user_uuid)
->>>>>>> controller
+	findUUID, _ := models.GetUserByUuid(uuid)
 	if findUUID.IsFind {
 		return Result{
 			Message: AlreadyUUID,
