@@ -66,7 +66,11 @@ func InitServer() *echo.Echo {
 
 		mQuestGroup := mockGroup.Group("/quest")
 		{
-			mQuestGroup.GET("/", mocks.MockGetQuests)			// http://localhost:8888/mock/quest/
+			mQuestGroup.POST("/", mocks.MockGetQuests)			// http://localhost:8888/mock/quest/
+
+
+
+			mQuestGroup.POST("/create", mocks.MockCreateQuest)	// http://localhost:8888/mock/quest/create
 		}
 
 	}

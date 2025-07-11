@@ -7,6 +7,7 @@ import (
 )
 
 func MockGetFriends(ctx echo.Context) error {
+	
 	return ctx.JSON(http.StatusOK, echo.Map{
 		"status": 200,
 		"data": echo.Map{
