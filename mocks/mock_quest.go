@@ -4,6 +4,8 @@ import (
 	"net/http"
 	"time"
 
+	"app/services"
+
 	"github.com/labstack/echo"
 )
 
@@ -133,6 +135,31 @@ func MockCreateQuest(ctx echo.Context) error {
 		"status": 200,
 		"data": echo.Map{
 			"quest_uuid": "d39f6597-ca73-401c-9a18-4d82ca61d413",
+		},
+	})
+}
+
+type point struct {
+	Lat float64
+	Lon float64
+}
+
+type checkQuest struct {
+	quest_uuid string	`json:"quest_uuid"`
+	place point		`json:"place"`
+}
+
+func MockCheckQuest(ctx echo.Context) error {
+	q := new(checkQuest)
+	if err := ctx.Bind(q);
+	err != nil { 
+		return err 
+	}
+	return ctx.JSON(http.StatusOK, echo.Map{
+		"status": 200,
+		"data": echo.Map{
+			"quest_uuid": q.quest_uuid,
+			"point": q.place,
 		},
 	})
 }

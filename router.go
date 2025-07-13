@@ -69,8 +69,9 @@ func InitServer() *echo.Echo {
 			mQuestGroup.POST("/", mocks.MockGetQuests)			// http://localhost:8888/mock/quest/
 
 
-
 			mQuestGroup.POST("/create", mocks.MockCreateQuest)	// http://localhost:8888/mock/quest/create
+
+			mQuestGroup.POST("/check", mocks.MockCheckQuest)		// http://localhost:8888/mock/quest/check
 		}
 
 	}
