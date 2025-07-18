@@ -19,6 +19,10 @@ type GenerateQuestsRequest struct {
 	Genre string			`json:"genre"`
 }
 
+type QuestUUID struct {
+	QuestUUID string `json:"quest_uuid"`
+}
+
 func GenerateQuests(userUuid string, req GenerateQuestsRequest) Result {
 
 	//UUIDを確認
@@ -111,14 +115,57 @@ func GenerateQuests(userUuid string, req GenerateQuestsRequest) Result {
 
 }
 
-// 地点を表す構造体
-type Point struct {
-	Lat float64 // 緯度（度数法）
-	Lon float64 // 経度（度数法）
+func CreateQuest(userUuid string, req models.CreateQuestRequest) Result {
+
+	//UUIDを確認
+	if userUuid == "" {
+		return Result{
+			Message: EmptyUUID,
+			Status:  http.StatusBadRequest,
+			Data:    nil,
+		}
+	}
+
+	// 必要な情報が入っているか確認
+	if req.FriendUUID == "" || req.StoreName == "" || req.StoreAddress == "" {
+		return Result{
+			Message: EmptyInfo,
+			Status:  http.StatusBadRequest,
+			Data:    nil,
+		}
+	}
+
+	// フレンドが存在しているか確認
+	friendCheck := models.FriendSearchByUuid(req.FriendUUID)
+
+	if !friendCheck {
+		return Result{
+			Message: NotFriend,
+			Status:  http.StatusBadRequest,
+			Data:    nil,
+		}
+	}
+
+	result, err := models.CreateQuest(userUuid, req)
+	if err != nil {
+		return Result{
+			Message: UnexpectedError,
+			Status:  http.StatusInternalServerError,
+			Data:    nil,
+		}
+	}
+
+	return Result{
+		Message: "",
+		Status:  http.StatusCreated,
+		Data:    QuestUUID{
+			QuestUUID: result,
+		},
+	}
 }
 
 // クエスト達成の有無
-func QuestRegister(userPoint Point,goalPoint Point,friendId string,userUuid string) Result {	
+func QuestRegister(userPoint models.Point,goalPoint models.Point,friendId string,userUuid string) Result {	
 	
 	//2点間の距離を求める
 	dist := GetDistance(userPoint,goalPoint)
@@ -149,7 +196,7 @@ func QuestRegister(userPoint Point,goalPoint Point,friendId string,userUuid stri
 }
 
 // 2地点間の距離を求める
-func GetDistance(point1 Point, point2 Point) int64 {
+func GetDistance(point1 models.Point, point2 models.Point) int64 {
 	//離れている距離
 	var dist float64
 

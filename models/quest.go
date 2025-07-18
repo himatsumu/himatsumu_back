@@ -5,6 +5,46 @@ import (
 	"time"
 )
 
+type CreateQuestRequest struct {
+	FriendUUID string `json:"friend_uuid"`
+	StoreName string `json:"store_name"`
+	StoreAddress string `json:"store_address"`
+	StoreType []string `json:"types"`
+	Reviews	[]string `json:"reviews"`
+	StorePlace Point `json:"store_place"`
+}
+
+// 地点を表す構造体
+type Point struct {
+	Lat float64 `json:"lat"`	// 緯度（度数法）
+	Lon float64 `json:"lon"`	// 経度（度数法）
+}
+
+func CreateQuest(userUuid string, req CreateQuestRequest) (string, error) {
+
+	questUUID, err := utils.Genid()
+	if err != nil {
+		return "", err
+	}
+	
+	quest := QuestHistory{
+		QuestUUID:  questUUID,
+		FriendUUID: req.FriendUUID,
+		StoreName:  req.StoreName,
+		StoreAdd: req.StoreAddress,
+		StoType: req.StoreType,
+		Reviews: req.Reviews,
+		StorePlace: req.StorePlace,
+		Possible : 0,
+		CreateAt:   time.Now(),
+	}
+
+	if err := dbconn.Create(&quest).Error; err != nil {
+		return "", err // エラー処理を追加
+	}
+
+	return questUUID, nil
+}
 
 // クエスト達成処理
 func QuestCompleted(UserId string, FriendId string) error {
@@ -56,8 +96,8 @@ func QuestsRecorded(frienduuid string)(string,error){
 		QuestUUID:  uuid,
 		FriendUUID: frienduuid,
 		StoreName:  "",
-		StoreLoca:  "",
-		StoType:    0,
+		StoreAdd:  "",
+		StoType:    []string{},
 		Possible:   0,
 		CreateAt:   time.Time{},
 	}

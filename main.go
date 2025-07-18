@@ -2,7 +2,6 @@ package main
 
 import (
 	"app/models"
-	"app/services"
 	"encoding/base64"
 	"fmt"
 	"log"
@@ -21,18 +20,18 @@ func main() {
 
 	// モデル初期化
 	err := models.Init()
-	log.Println("err",err)
+	log.Println("err", err)
 	// サーバー起動
 	mainServer()
 	// DebugModel()
 }
 
-func DebugModel() {
-	result := models.CreateSampleUser()
-	// results := models.Debug(result)
-	// log.Println("result",results)
-	services.Debug(result)
-}
+// func DebugModel() {
+// 	result := models.CreateSampleUser()
+// 	// results := models.Debug(result)
+// 	// log.Println("result",results)
+// 	services.Debug(result)
+// }
 
 func mainServer() {
 	// サーバー初期化

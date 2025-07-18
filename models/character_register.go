@@ -26,7 +26,6 @@ func RegisterCharacter(frienfId string)(string,error) {
 		TypeStage:  0,
 		Exp:        0,
 		Birthday:   time.Now().Format("2006-01-02"), 
-		Point:      0,
 		CharaImage: "",
 		OwnChars:   []OwnCharacter{},
 	}
