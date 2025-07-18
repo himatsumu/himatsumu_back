@@ -19,6 +19,10 @@ type GenerateQuestsRequest struct {
 	Genre string			`json:"genre"`
 }
 
+type QuestUUID struct {
+	QuestUUID string `json:"quest_uuid"`
+}
+
 func GenerateQuests(userUuid string, req GenerateQuestsRequest) Result {
 
 	//UUIDを確認
@@ -154,7 +158,9 @@ func CreateQuest(userUuid string, req models.CreateQuestRequest) Result {
 	return Result{
 		Message: "",
 		Status:  http.StatusCreated,
-		Data:    result,
+		Data:    QuestUUID{
+			QuestUUID: result,
+		},
 	}
 }
 
