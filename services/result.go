@@ -33,6 +33,7 @@ const (
 	AlreadyUUID              = "UUIDが重複しています"
 	UnexpectedError          = "予期しないエラーが発生しました"
 	NotRecommendQuest        = "クエスト生成中にエラーが発生しました"
+	NotFriend                = "フレンドではないユーザーです"
 
 	InvalidRequestFormat = "リクエストの形式が不正です"
 )
