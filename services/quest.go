@@ -132,15 +132,7 @@ func CreateQuest(userUuid string, req models.CreateQuestRequest) Result {
 	}
 
 	// フレンドが存在しているか確認
-	friendCheck, err := models.FriendSearchByUuid(req.FriendUUID)
-	if err != nil {
-		fmt.Print(err)
-		return Result{
-			Message: UnexpectedError,
-			Status:  http.StatusInternalServerError,
-			Data:    nil,
-		}
-	}
+	friendCheck := models.FriendSearchByUuid(req.FriendUUID)
 
 	if !friendCheck {
 		return Result{
