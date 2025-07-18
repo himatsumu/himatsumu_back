@@ -2,6 +2,7 @@ package models
 
 import (
 	"time"
+	"github.com/lib/pq"
 )
 
 // User ユーザーテーブル
@@ -21,6 +22,7 @@ type Friend struct {
 	FriendUUID  string         `gorm:"primaryKey;column:FRIEND_UUID;type:CHAR(36);not null"`
 	UserUUID1   string         `gorm:"column:USER_UUID1;type:CHAR(36);not null;uniqueIndex:idx_user_uuid_pair"`
 	UserUUID2   string         `gorm:"column:USER_UUID2;type:CHAR(36);not null;uniqueIndex:idx_user_uuid_pair"`
+	Point      int            `gorm:"column:POINT;type:INT;not null;default:0"`
 	LastMeetAt  time.Time      `gorm:"column:LAST_MEET_AT;type:DATE;"`
 	CreateAt    time.Time      `gorm:"column:CREATE_AT;type:timestamp;not null"`
 	OwnChars    []OwnCharacter `gorm:"foreignKey:FriendUUID;references:FriendUUID"`
@@ -62,7 +64,6 @@ type Character struct {
 	FourthEvo  time.Time 	  `gorm:"column:FOURTH_EVO;type:timestamp"`
 	FifthEvo   time.Time 	  `gorm:"column:FIFTH_EVO;type:timestamp"`
 	SixthEvo   time.Time 	  `gorm:"column:SIXTH_EVO;type:timestamp"`
-	Point      int            `gorm:"column:POINT;type:INT;not null;default:0"`
 	CharaImage string         `gorm:"column:CHARA_IMAGE;type:VARCHAR(50)"`
 	OwnChars   []OwnCharacter `gorm:"foreignKey:CharaUUID;references:CharaUUID"`
 }
@@ -102,22 +103,20 @@ type QuestHistory struct {
 	QuestUUID  string    `gorm:"primaryKey;column:QUEST_UUID;type:CHAR(36);not null"`
 	FriendUUID string    `gorm:"column:FRIEND_UUID;type:CHAR(36);not null"`
 	StoreName  string    `gorm:"column:STORE_NAME;type:VARCHAR(30);not null"`
-	StoreLoca  string    `gorm:"column:STORE_LOCA;type:VARCHAR(50);not null"`
-	StoType    int       `gorm:"column:STO_TYPE;type:INT;not null"`
+	StoreAdd  string    `gorm:"column:STORE_LOCA;type:VARCHAR(50);not null"`
+	Reviews    pq.StringArray    `gorm:"column:REVIEWS;type:text[];"`
+	Keywords   pq.StringArray    `gorm:"column:KEYWORDS;type:text[];"`
+	StorePlace Point    `gorm:"column:STORE_PLACE;type:jsonb;not null"`
+	StoType    pq.StringArray      `gorm:"column:STO_TYPE;type:text[];not null"`
 	Possible   int       `gorm:"column:POSSIBLE;type:INT;not null;default:1"`
 	CreateAt   time.Time `gorm:"column:CREATE_AT;type:timestamp;not null"`
 }
 
 type QuestCheck struct {
+	QuestUUID  string    `gorm:"primaryKey;column:QUEST_UUID;type:CHAR(36);not null"`
     UserUUID   string    `gorm:"primaryKey;column:USER_UUID;type:CHAR(36);not null"` // ユーザー固有識別子
     FriendUUID string    `gorm:"column:FRIEND_UUID;type:CHAR(36);not null"`          // フレンド固有識別子
     CreateAt   time.Time `gorm:"column:create_at;type:timestamp;not null"`            // 達成日時
-}
-
-// StoreType 店舗種別テーブル
-type StoreType struct {
-	StoType  int    `gorm:"primaryKey;column:STO_TYPE;type:INT;not null"`
-	TypeName string `gorm:"column:TYPE_NAME;type:VARCHAR(50);not null"`
 }
 
 // MeetHistory 遊んだ日履歴テーブル
