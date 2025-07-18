@@ -71,6 +71,8 @@ func InitServer() *echo.Echo {
 		questGroup := authGroup.Group("/quest")
 		{
 			questGroup.POST("/quests", controllers.GenerateQuests)	// http://localhost:8888/auth/quest/quests
+
+			questGroup.POST("/create", controllers.CreateQuest)	// http://localhost:8888/auth/quest/create
 		}
 
 		//アルバム
