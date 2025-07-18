@@ -74,6 +74,7 @@ func GenerateQuests(userUuid string, req GenerateQuestsRequest) Result {
 		}
 	}
 
+	// レスポンスを閉じる
 	defer aiResponse.Body.Close()
 
 	if aiResponse.StatusCode != http.StatusOK {
@@ -92,6 +93,7 @@ func GenerateQuests(userUuid string, req GenerateQuestsRequest) Result {
         }
     }
 
+	//JSONを構造体に変換
 	var aiResult interface{}
 	err = json.Unmarshal(body, &aiResult)
 	if err != nil {
@@ -100,8 +102,6 @@ func GenerateQuests(userUuid string, req GenerateQuestsRequest) Result {
 			Status:  http.StatusInternalServerError,
 		}
 	}
-
-	fmt.Println(aiResult)
 
 	return Result{
 		Message: "",
