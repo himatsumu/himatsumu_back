@@ -7,16 +7,16 @@ import (
 )
 
 //フレンドUUIDが存在するか確認する
-func FriendSearchByUuid(friendUuid string) (bool, error) {
+func FriendSearchByUuid(friendUuid string) (bool) {
 
 	fFriend := Friend{}
 
 	find_result := dbconn.Where(&Friend{FriendUUID: friendUuid}).First(&fFriend)
 
 	if err := find_result.Error; errors.Is(err, gorm.ErrRecordNotFound) {
-		return false, gorm.ErrRecordNotFound
+		return false
 	}
 
-	return true, nil
+	return true
 }
 	
