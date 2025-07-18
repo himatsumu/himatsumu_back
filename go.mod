@@ -7,6 +7,7 @@ require (
 	github.com/google/uuid v1.6.0
 	github.com/joho/godotenv v1.5.1
 	github.com/labstack/echo v3.3.10+incompatible
+	github.com/lib/pq v1.10.9
 	github.com/tidwall/geodesic v1.52.4
 	gorm.io/gorm v1.30.0
 )
