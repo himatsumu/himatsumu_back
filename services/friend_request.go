@@ -8,19 +8,19 @@ import (
 )
 
 // フレンド申請送信
-func SendRequest(Sender_id string, Receiver_id string) Result {
-	//同じユーザーの場合
-	if Sender_id == Receiver_id {
+func SendRequest(senderUuid string, recieverUuid string) Result {
+
+	if senderUuid == recieverUuid {
 		return Result{
-			Message: SameUser,
+			Message: "自分自身には送れません",
 			Status:  http.StatusBadRequest,
 			Data:    nil,
 		}
 	}
 
 	//ユーザーが存在するかチェック
-	uresult1, err := models.GetUserByUuid(Sender_id)
-	uresult2, err := models.GetUserByUuid(Receiver_id)
+	uresult1, err := models.GetUserByUuid(senderUuid)
+	uresult2, err := models.GetUserByUuid(recieverUuid)
 
 	if !uresult1.IsFind || !uresult2.IsFind {
 		return Result{
@@ -31,7 +31,7 @@ func SendRequest(Sender_id string, Receiver_id string) Result {
 	}
 
 	//リクエストとフレンドであるか検索する
-	request,Sent_filter, friend := models.IdRequestfound(Sender_id, Receiver_id)
+	request,Sent_filter, friend := models.IdRequestfound(senderUuid, recieverUuid)
 
 	//既にリクエストが存在している場合
 	if request != 0 {
@@ -64,7 +64,7 @@ func SendRequest(Sender_id string, Receiver_id string) Result {
 	}
 
 	//データベースに書き込み
-	fuid, err := models.SendFriendRequest(Sender_id, Receiver_id)
+	fuid, err := models.SendFriendRequest(senderUuid, recieverUuid)
 
 	if err != nil {
 		log.Println(err)
