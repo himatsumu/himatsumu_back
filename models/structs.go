@@ -23,12 +23,15 @@ type Friend struct {
 	UserUUID1   string         `gorm:"column:USER_UUID1;type:CHAR(36);not null;uniqueIndex:idx_user_uuid_pair"`
 	UserUUID2   string         `gorm:"column:USER_UUID2;type:CHAR(36);not null;uniqueIndex:idx_user_uuid_pair"`
 	Point      int            `gorm:"column:POINT;type:INT;not null;default:0"`
+	FaceImg     string       `gorm:"column:FACE_IMG;type:VARCHAR(50);"`
 	LastMeetAt  time.Time      `gorm:"column:LAST_MEET_AT;type:DATE;"`
 	CreateAt    time.Time      `gorm:"column:CREATE_AT;type:timestamp;not null"`
 	OwnChars    []OwnCharacter `gorm:"foreignKey:FriendUUID;references:FriendUUID"`
 	OwnCostumes []OwnCostume   `gorm:"foreignKey:FriendUUID;references:FriendUUID"`
 	QuestHis    []QuestHistory `gorm:"foreignKey:FriendUUID;references:FriendUUID"`
 	MeetHis     []MeetHistory  `gorm:"foreignKey:FriendUUID;references:FriendUUID"`
+	User1       User           `gorm:"foreignKey:UserUUID1;references:UserUUID"`
+	User2       User           `gorm:"foreignKey:UserUUID2;references:UserUUID"`
 }
 
 
