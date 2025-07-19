@@ -47,7 +47,7 @@ func InitServer() *echo.Echo {
 		requestGroup := authGroup.Group("/request")
 		{
 			//フレンド申請送信
-			requestGroup.POST("/send",controllers.SendRequest) // http://localhost:8888/auth/request/send
+			requestGroup.POST("/send/:receiverUuid",controllers.SendRequest) // http://localhost:8888/auth/request/send/:receiverUuid
 			//フレンド申請受信
 			requestGroup.GET("/:userId",controllers.GetRequest) // http://localhost:8888/auth/request/:userId
 			//フレンド登録
@@ -58,7 +58,7 @@ func InitServer() *echo.Echo {
 		friendGroup := authGroup.Group("/friend")
 		{
 			//フレンド一覧検索
-			friendGroup.GET("/:userId",controllers.GetFriends)// http://localhost:8888/auth/friend/:userId
+			friendGroup.GET("/",controllers.GetFriends)// http://localhost:8888/auth/friend/
 		}
 
 		//キャラクター
