@@ -2,33 +2,20 @@ package controllers
 
 import (
 	"app/services"
-	"log"
+	"fmt"
 	"net/http"
 
 	"github.com/labstack/echo"
 )
 
-// リクエストボディの構造体
-type RequestBody struct {
-    SenderId   string `json:"SenderId"`    
-	ReceiverId string `json:"ReceiverId"`
-}
-
 // リクエストをDBに登録
 func SendRequest(ctx echo.Context) error {
-	var body RequestBody
 
-	err := ctx.Bind(&body)
-	log.Println(body)
-	if err != nil {
-		return ctx.JSON(http.StatusBadRequest, echo.Map{
-			"status": http.StatusBadRequest,
-			"message": services.InvalidRequestFormat,
-		}) 
-	}
+	userUuid := ctx.Get("user_uuid").(string)
+	recieverUuid := ctx.Param("receiverUuid")
 
 	// サービスを呼び出す
-	result := services.SendRequest(body.SenderId,body.ReceiverId)
+	result := services.SendRequest(userUuid, recieverUuid)
 
 	// エラー処理
 	if result.Status != 201 {
@@ -38,7 +25,7 @@ func SendRequest(ctx echo.Context) error {
 	return ctx.JSON(result.Status, result)
 }
 
-//idを元にユーザーの情報を返す
+// idを元にユーザーの情報を返す
 func GetRequest(ctx echo.Context) error {
 	id := ctx.Param("userId")
 
@@ -47,7 +34,7 @@ func GetRequest(ctx echo.Context) error {
 
 	// エラー処理
 	if result.Status != 200 {
-		return ctx.JSON(result.Status,result)
+		return ctx.JSON(result.Status, result)
 	}
 
 	return ctx.JSON(http.StatusOK, result)
@@ -56,10 +43,9 @@ func GetRequest(ctx echo.Context) error {
 // リクエストボディの構造体
 type RegisterBody struct {
 	RequestId  string `json:"RequestId"`
-    SenderId   string `json:"SenderId"`    
+	SenderId   string `json:"SenderId"`
 	ReceiverId string `json:"ReceiverId"`
 }
-
 
 func RegisterFriend(ctx echo.Context) error {
 	var body RegisterBody
@@ -67,26 +53,27 @@ func RegisterFriend(ctx echo.Context) error {
 	err := ctx.Bind(&body)
 	if err != nil {
 		return ctx.JSON(http.StatusBadRequest, echo.Map{
-			"status": http.StatusBadRequest,
+			"status":  http.StatusBadRequest,
 			"message": services.InvalidRequestFormat,
-		}) 
+		})
 	}
 
 	// サービスを呼び出す
-	result := services.FriendRecord(body.RequestId,body.SenderId,body.ReceiverId)
+	result := services.FriendRecord(body.RequestId, body.SenderId, body.ReceiverId)
 
 	return ctx.JSON(result.Status, result)
 }
 
 func GetFriends(ctx echo.Context) error {
-	id := ctx.Param("userId")
+	uuid := ctx.Get("user_uuid").(string)
 
 	// サービスを呼び出す
-	result := services.GetFriendsByUuid(id)
-	
+	result := services.GetFriendsByUuid(uuid)
+	fmt.Println(result)
+
 	// エラー処理
 	if result.Status != 200 {
-		return ctx.JSON(result.Status,result)
+		return ctx.JSON(result.Status, result)
 	}
 
 	return ctx.JSON(http.StatusOK, result)
