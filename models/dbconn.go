@@ -97,12 +97,12 @@ func Seed(db *gorm.DB) error {
 		userUUID1   = "11111111-1111-1111-1111-111111111111"
 		userUUID2   = "22222222-2222-2222-2222-222222222222"
 		userUUID3   = "33333333-3333-3333-3333-333333333333"
-		friendUUID1 = "f111-2222-1111-2222-222222222222"
-		charaUUID1  = "caaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa"
-		cosUUID1    = "c05b-bbbb-bbbb-bbbb-bbbbbbbbbbbb"
-		questUUID1  = "qcec-cccc-cccc-cccc-cccccccccccc"
-		meetUUID1   = "medd-dddd-dddd-dddd-dddddddddddd"
-		picUUID1    = "p1ce-eeee-eeee-eeee-eeeeeeeeeeee"
+		friendUUID1 = "f1111111-2222-1111-2222-222222222222"
+		charaUUID1  = "caaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa"
+		cosUUID1    = "c05bbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb"
+		questUUID1  = "qceccccc-cccc-cccc-cccc-cccccccccccc"
+		meetUUID1   = "medddddd-dddd-dddd-dddd-dddddddddddd"
+		picUUID1    = "p1ceeeee-eeee-eeee-eeee-eeeeeeeeeeee"
 	)
 
 
