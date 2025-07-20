@@ -275,9 +275,9 @@ func GetDistance(point1 models.Point, point2 models.Point) int64 {
 }
 
 // クエストが2人とも達成しているか()
-func IsQuest(frienduuid string) Result {
+func IsQuest(questUuid string) Result {
 
-	QuestCount,err := models.QuestCount(frienduuid)
+	QuestCount,err := models.QuestCount(questUuid)
 
 	if err != nil {
 		return Result{
