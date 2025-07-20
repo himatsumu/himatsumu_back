@@ -52,3 +52,23 @@ func CreateQuest(ctx echo.Context) error {
 	// ユーザー情報を返す
 	return ctx.JSON(http.StatusCreated, result)
 }
+
+func CheckQuest(ctx echo.Context) error {
+	// リクエストからクエリパラメータを取得
+	userUuid := ctx.Get("user_uuid").(string)
+
+	req := new(services.CheckQuestRequest)
+	ctx.Bind(req)
+
+	// Service層の関数を呼び出す
+	result := services.CheckQuest(userUuid, *req)
+
+	// エラー処理
+	if result.Status != http.StatusOK {
+		return ctx.JSON(result.Status, result)
+	}
+
+	// ユーザー情報を返す
+	return ctx.JSON(http.StatusOK, result)
+	
+}
