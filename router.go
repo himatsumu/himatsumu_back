@@ -73,6 +73,12 @@ func InitServer() *echo.Echo {
 			questGroup.POST("/quests", controllers.GenerateQuests)	// http://localhost:8888/auth/quest/quests
 
 			questGroup.POST("/create", controllers.CreateQuest)	// http://localhost:8888/auth/quest/create
+
+			//クエストを達成しているかのチェック
+			questGroup.POST("/check", controllers.CheckQuest) // http://localhost:8888/auth/quest/check
+
+			//両方ともクエストが達成しているかのチェック
+			questGroup.GET("/complete/:questUuid", controllers.QuestCompleted)	// http://localhost:8888/auth/quest/complete/:questUuid
 		}
 
 		//アルバム
