@@ -34,6 +34,7 @@ const (
 	UnexpectedError          = "予期しないエラーが発生しました"
 	NotRecommendQuest        = "クエスト生成中にエラーが発生しました"
 	NotFriend                = "フレンドではないユーザーです"
+	QuestNotFound            = "クエストが見つかりませんでした"
 
 	InvalidRequestFormat = "リクエストの形式が不正です"
 )
