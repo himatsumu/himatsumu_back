@@ -2,22 +2,39 @@ package models
 
 import (
 	"app/utils"
+	"database/sql/driver"
+	"encoding/json"
+	"errors"
 	"time"
 )
 
 type CreateQuestRequest struct {
-	FriendUUID string `json:"friend_uuid"`
-	StoreName string `json:"store_name"`
-	StoreAddress string `json:"store_address"`
-	StoreType []string `json:"types"`
-	Reviews	[]string `json:"reviews"`
-	StorePlace Point `json:"store_place"`
+	FriendUUID   string   `json:"friend_uuid"`
+	StoreName    string   `json:"store_name"`
+	StoreAddress string   `json:"store_address"`
+	StoreType    []string `json:"types"`
+	Reviews      []string `json:"reviews"`
+	StorePlace   Point    `json:"store_place"`
+}
+
+// Point構造体をJSON形式に変換
+func (p Point) Value() (driver.Value, error) {
+	return json.Marshal(p)
+}
+
+// JSON形式をPoint構造体に変換
+func (p *Point) Scan(value interface{}) error {
+	b, ok := value.([]byte)
+	if !ok {
+		return errors.New("type assertion to []byte failed")
+	}
+	return json.Unmarshal(b, &p)
 }
 
 // 地点を表す構造体
 type Point struct {
-	Lat float64 `json:"lat"`	// 緯度（度数法）
-	Lon float64 `json:"lon"`	// 経度（度数法）
+	Lat float64 `json:"lat"` // 緯度（度数法）
+	Lon float64 `json:"lon"` // 経度（度数法）
 }
 
 func CreateQuest(userUuid string, req CreateQuestRequest) (string, error) {
@@ -26,16 +43,16 @@ func CreateQuest(userUuid string, req CreateQuestRequest) (string, error) {
 	if err != nil {
 		return "", err
 	}
-	
+
 	quest := QuestHistory{
 		QuestUUID:  questUUID,
 		FriendUUID: req.FriendUUID,
 		StoreName:  req.StoreName,
-		StoreAdd: req.StoreAddress,
-		StoType: req.StoreType,
-		Reviews: req.Reviews,
+		StoreAdd:   req.StoreAddress,
+		StoType:    req.StoreType,
+		Reviews:    req.Reviews,
 		StorePlace: req.StorePlace,
-		Possible : 0,
+		Possible:   0,
 		CreateAt:   time.Now(),
 	}
 
@@ -46,9 +63,20 @@ func CreateQuest(userUuid string, req CreateQuestRequest) (string, error) {
 	return questUUID, nil
 }
 
+// クエストの達成場所を取得
+func GetQuestPoint(questUUID string) (Point, error) {
+	var quest QuestHistory
+	if err := dbconn.Where("\"QUEST_UUID\" = ?", questUUID).First(&quest).Error; err != nil {
+		return Point{}, err // エラー処理を追加
+	}
+
+	return quest.StorePlace, nil
+}
+
 // クエスト達成処理
-func QuestCompleted(UserId string, FriendId string) error {
+func QuestCompleted(QuestUuid string, UserId string, FriendId string) error {
 	quest := QuestCheck{
+		QuestUUID:  QuestUuid,
 		UserUUID:   UserId,
 		FriendUUID: FriendId,
 		CreateAt:   time.Now(),
@@ -74,29 +102,28 @@ func QuestCount(frienduuid string) (int64, error) {
 	//3分前の時間を計算
 	threeMinutesAgo := currentTime.Add(-3 * time.Minute)
 
-	err := dbconn.Model(&QuestCheck{FriendUUID: frienduuid}).Where("create_at BETWEEN ? AND ?", threeMinutesAgo, currentTime).Count(&count).Error;
+	err := dbconn.Model(&QuestCheck{FriendUUID: frienduuid}).Where("create_at BETWEEN ? AND ?", threeMinutesAgo, currentTime).Count(&count).Error
 
 	if err != nil {
-		return 0,err
+		return 0, err
 	}
-	return count ,nil
+	return count, nil
 }
 
-
-//完了済みのQuestHistoryテーブルに登録(ここupdateにする)
-func QuestsRecorded(frienduuid string)(string,error){
+// 完了済みのQuestHistoryテーブルに登録(ここupdateにする)
+func QuestsRecorded(frienduuid string) (string, error) {
 
 	//uuid生成
-	uuid,err := utils.Genid()
+	uuid, err := utils.Genid()
 	if err != nil {
-		return "",err
+		return "", err
 	}
 
 	history := QuestHistory{
 		QuestUUID:  uuid,
 		FriendUUID: frienduuid,
 		StoreName:  "",
-		StoreAdd:  "",
+		StoreAdd:   "",
 		StoType:    []string{},
 		Possible:   0,
 		CreateAt:   time.Time{},
@@ -104,8 +131,8 @@ func QuestsRecorded(frienduuid string)(string,error){
 
 	//データベースに書き込む
 	if err := dbconn.Create(&history).Error; err != nil {
-        return "",err // エラー処理を追加
-    }
-	
-	return uuid,nil
-}	
+		return "", err // エラー処理を追加
+	}
+
+	return uuid, nil
+}
