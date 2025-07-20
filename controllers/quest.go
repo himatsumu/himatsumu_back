@@ -72,3 +72,18 @@ func CheckQuest(ctx echo.Context) error {
 	return ctx.JSON(http.StatusOK, result)
 	
 }
+
+func QuestCompleted (ctx echo.Context) error {
+	questUuid := ctx.Param("questUuid")
+
+	// Service層の関数を呼び出す
+	result := services.IsQuest(questUuid)
+
+	// エラー処理
+	if result.Status != http.StatusOK {
+		return ctx.JSON(result.Status, result)
+	}
+
+	// ユーザー情報を返す
+	return ctx.JSON(http.StatusOK, result)
+}
