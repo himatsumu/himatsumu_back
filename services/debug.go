@@ -9,7 +9,7 @@ import (
 
 func Debug(user []models.User) {
 	//キャラクターを作るサンプル
-	chara,err :=models.CreateCharacter()
+	chara, err := models.CreateCharacter()
 	log.Println(chara)
 
 	log.Println(user[0].UserUUID, user[1].UserUUID)
@@ -42,12 +42,12 @@ func Debug(user []models.User) {
 	}
 	log.Println("拒否", result4.Data)
 
-	log.Println(maps[1].ReceverId)	
+	log.Println(maps[1].ReceverId)
 	log.Println(user[3].UserUUID)
 	log.Println(maps[1])
 
 	//承認
-	result5 := FriendRecord(maps[1].ReqID,user[3].UserUUID, maps[1].ReceverId)
+	result5 := FriendRecord(maps[1].ReqID, user[3].UserUUID, maps[1].ReceverId)
 	if result5.Status != 201 {
 		log.Println(result5.Message)
 	}
@@ -64,14 +64,20 @@ func Debug(user []models.User) {
 
 	log.Println(maps[1].ReceverId)
 	log.Println(user[3].UserUUID)
-	
-	//クエストクリア
-	err = models.QuestCompleted(maps[1].ReceverId,maps2.friendId)
+
+	// クエスト作成
+	questUuid, err := models.CreateQuest(user[1].UserUUID, models.CreateQuestRequest{FriendUUID: maps[1].ReceverId, StoreName: "test", StoreAddress: "test"})
 	if err != nil {
 		log.Println(err)
 	}
 
-	err = models.QuestCompleted(user[3].UserUUID,maps2.friendId)
+	//クエストクリア
+	err = models.QuestCompleted(questUuid, maps[1].ReceverId, maps2.friendId)
+	if err != nil {
+		log.Println(err)
+	}
+
+	err = models.QuestCompleted(user[3].UserUUID, maps[1].ReceverId, maps2.friendId)
 	if err != nil {
 		log.Println(err)
 	}
