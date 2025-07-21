@@ -27,7 +27,7 @@ func SendRequest(ctx echo.Context) error {
 
 // idを元にユーザーの情報を返す
 func GetRequest(ctx echo.Context) error {
-	id := ctx.Param("userId")
+	id := ctx.Get("user_uuid").(string)
 
 	// サービスを呼び出す
 	result := services.GetRequest(id)
