@@ -66,3 +66,13 @@ func GetFriends(uuid string) ([]FriendResponse, error) {
 
 	return response, nil
 }
+
+type FriendPoint struct {
+	Point       int
+}
+
+func GetFriendPoint(uuid string) (Friend, error) {
+	var friendPoint Friend
+	err := dbconn.Where("\"FRIEND_UUID\" = ?", uuid).First(&friendPoint).Error
+	return friendPoint, err
+}
