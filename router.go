@@ -49,7 +49,7 @@ func InitServer() *echo.Echo {
 			//フレンド申請送信
 			requestGroup.POST("/send/:receiverUuid",controllers.SendRequest) // http://localhost:8888/auth/request/send/:receiverUuid
 			//フレンド申請受信
-			requestGroup.GET("/",controllers.GetRequest) // http://localhost:8888/auth/request/:userId
+			requestGroup.GET("/",controllers.GetRequest) // http://localhost:8888/auth/request/
 			//フレンド登録
 			requestGroup.POST("/register",controllers.RegisterFriend)// http://localhost:8888/auth/request/register
 		}
