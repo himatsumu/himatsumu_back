@@ -6,6 +6,7 @@ import (
 	"encoding/json"
 	"errors"
 	"time"
+	"gorm.io/gorm"
 )
 
 type CreateQuestRequest struct {
@@ -135,4 +136,72 @@ func QuestsRecorded(frienduuid string) (string, error) {
 	}
 
 	return uuid, nil
+}
+
+func UpdateHistory(questUuid string) error {
+
+	result := dbconn.Model(&QuestHistory{}).Where("\"QUEST_UUID\" = ?", questUuid).Update("\"POSSIBLE\"", 1)
+
+		// エラーが発生した場合
+		if result.Error != nil {
+			return result.Error
+		}
+
+		if result.RowsAffected == 0 {
+			return gorm.ErrRecordNotFound
+		}
+
+		return nil
+}
+
+func UpdateCharaAndPoint(charaUuid string, friendUuid string, exp int, levelUpCount int, point int) error {
+
+	updatesChara := map[string]interface{}{
+		"\"EXP\"": exp,
+	}
+
+	// 更新対象のカラム名を保持する変数
+	var columnToUpdate string
+
+	var chara Character
+
+	if levelUpCount == 1 {
+		if err := dbconn.Where("\"CHARA_UUID\" = ?", charaUuid).First(&chara).Error; err != nil {
+			return err
+		}
+
+		// どの進化日を更新すべきか判定する
+		if chara.FirstEvo.IsZero() {
+			columnToUpdate = "first_evo"
+		} else if chara.SecondEvo.IsZero() {
+			columnToUpdate = "second_evo"
+		} else if chara.ThirdEvo.IsZero() {
+			columnToUpdate = "third_evo"
+		} else if chara.FourthEvo.IsZero() {
+			columnToUpdate = "fourth_evo"
+		} else if chara.FifthEvo.IsZero() {
+			columnToUpdate = "fifth_evo"
+		} else if chara.SixthEvo.IsZero() {
+			columnToUpdate = "sixth_evo"
+		}
+	}
+
+	
+	if columnToUpdate != "" {
+		updatesChara[columnToUpdate] = time.Now()
+		updatesChara["\"TYPE_STAGE\""] = chara.TypeStage + 1
+	}
+
+	result := dbconn.Model(&Character{}).Where("\"CHARA_UUID\" = ?", charaUuid).Updates(updatesChara)
+	if result.Error != nil {
+		return result.Error
+	}
+
+	// フレンドポイントの更新
+	result = dbconn.Model(&Friend{}).Where("\"FRIEND_UUID\" = ?", friendUuid).Updates(map[string]interface{}{"\"POINT\"": point})
+	if result.Error != nil {
+		return result.Error
+	}
+		
+	return nil
 }
