@@ -2,16 +2,18 @@ package services
 
 import (
 	"app/models"
+	"bytes"
 	"encoding/json"
+	"errors"
 	"fmt"
+	"io"
 	"net/http"
 	"time"
-	"io"
-	"bytes"
-	"github.com/tidwall/geodesic"
-	"errors"
-	"gorm.io/gorm"
+
 	"github.com/jackc/pgx/v5/pgconn"
+	"github.com/labstack/echo"
+	"github.com/tidwall/geodesic"
+	"gorm.io/gorm"
 )
 
 type GenerateQuestsRequest struct {
@@ -274,8 +276,22 @@ func GetDistance(point1 models.Point, point2 models.Point) int64 {
 	return int64(dist)
 }
 
+type IsQuestData struct {
+	CharaUuid string `json:"chara_uuid"`
+	FriendUuid string `json:"friend_uuid"`
+}
+
 // クエストが2人とも達成しているか()
-func IsQuest(questUuid string) Result {
+func IsQuest(questUuid string, charaUuid string, friendUuid string) Result {
+	fmt.Println(questUuid, charaUuid, friendUuid)
+
+	if questUuid == "" || charaUuid == "" {
+		return Result{
+			Message: EmptyInfo,
+			Status:  http.StatusBadRequest,
+			Data:    nil,
+		}
+	}
 
 	QuestCount,err := models.QuestCount(questUuid)
 
@@ -294,14 +310,75 @@ func IsQuest(questUuid string) Result {
 			Data:    nil,
 		}
 	}
+	
+	err = models.UpdateHistory(questUuid)
+	if err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return Result{
+				Message: QuestNotFound,
+				Status:  http.StatusNotFound,
+				Data:    nil,
+			}
+		}
 
-	//ここにmodelsでhistoryの更新を呼びだす
+		// それ以外のエラー
+		return Result{
+			Message: UnexpectedError,
+			Status:  http.StatusInternalServerError,
+			Data:    nil,
+		}
+	}
+
+	//キャラクター情報の更新のためキャラ情報を取得
+	charaDetail, err := models.GetCharacterDetail(charaUuid)
+	if err != nil {
+		return Result{
+			Message: UnexpectedError,
+			Status:  http.StatusInternalServerError,
+			Data:    nil,
+		}
+	}
+	
+	//経験値処理
+	exp := charaDetail.Exp + 25
+	levelUpCount := 0
+	if exp >= 100 {
+		exp = 0 + exp - 100
+		levelUpCount += 1
+	}
+
+	var levelUp bool
+	if levelUpCount == 1 {
+		levelUp = true
+	} else {
+		levelUp = false
+	}
+
+	friendPoint, err := models.GetFriendPoint(friendUuid)
+	if err != nil {
+		return Result{
+			Message: UnexpectedError,
+			Status:  http.StatusInternalServerError,
+			Data:    nil,
+		}
+	}
+	//所持コイン処理
+	point := friendPoint.Point + 25
+
+	//キャラクター情報と所持コインを更新
+	err = models.UpdateCharaAndPoint(charaUuid, friendUuid, exp, levelUpCount, point)
 
 	
 	return Result{
 		Message: "",
 		Status:  http.StatusOK,
-		Data:    nil,
+		Data: echo.Map{
+			"total_point": point,
+			"get_point": 25,
+			"get_exp": 25,
+			"exp": exp,
+			"level_up": levelUp,
+		},
 	}
 }
  
