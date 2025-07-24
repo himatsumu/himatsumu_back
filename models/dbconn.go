@@ -128,7 +128,7 @@ func Seed(db *gorm.DB) error {
 	}
 
 	characterTestData := []Character{
-		{CharaUUID: charaUUID1, CharaName: "くまさん", CharaType: 1, TypeStage: 1, Exp: 1200, Birthday: "04-01", CharaImage: "/images/faces/kuma.svg"},
+		{CharaUUID: charaUUID1, CharaName: "くまさん", CharaType: 1, TypeStage: 1, Exp: 0, Birthday: "04-01", CharaImage: "/images/faces/kuma.svg"},
 	}
 
 	ownCharacterTestData := []OwnCharacter{
