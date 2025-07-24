@@ -13,6 +13,7 @@ func CORSMiddleware() echo.MiddlewareFunc {
 			allowedOrigins := []string{
 				"http://localhost:3000",
 				"http://0.0.0.0:3000",
+				"http://localhost:5173",
 			}
 			req := c.Request()
 			res := c.Response()
