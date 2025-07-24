@@ -82,8 +82,9 @@ func Debug(user []models.User) {
 		log.Println(err)
 	}
 
-	result7 := IsQuest(maps2.friendId)
-	if result7.Status != 200 {
-		log.Println(result7.Message)
-	}
+	//エラーはいたのでコメントアウト
+	// result7 := IsQuest(maps2.friendId, )
+	// if result7.Status != 200 {
+	// 	log.Println(result7.Message)
+	// }
 }

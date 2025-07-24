@@ -1,8 +1,8 @@
 package controllers
 
 import (
-	"app/services"
 	"app/models"
+	"app/services"
 	"net/http"
 
 	"github.com/labstack/echo"
@@ -70,14 +70,16 @@ func CheckQuest(ctx echo.Context) error {
 
 	// ユーザー情報を返す
 	return ctx.JSON(http.StatusOK, result)
-	
+
 }
 
-func QuestCompleted (ctx echo.Context) error {
+func QuestCompleted(ctx echo.Context) error {
 	questUuid := ctx.Param("questUuid")
+	req := new(services.IsQuestData)
+	ctx.Bind(req)
 
 	// Service層の関数を呼び出す
-	result := services.IsQuest(questUuid)
+	result := services.IsQuest(questUuid, req.CharaUuid, req.FriendUuid)
 
 	// エラー処理
 	if result.Status != http.StatusOK {
