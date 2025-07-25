@@ -29,6 +29,9 @@ func InitServer() *echo.Echo {
 		return ctx.String(http.StatusOK, "Hello, World! from go-server.")
 	})
 
+	// 画像ディレクトリ公開
+	server.Static("/images", "./statics")	
+
 	authGroup := server.Group("/auth", jwtMiddleware)
 	{
 
@@ -80,7 +83,7 @@ func InitServer() *echo.Echo {
 		}
 
 
-
+		
 	}
 
 	return server
