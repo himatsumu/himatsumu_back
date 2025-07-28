@@ -2,6 +2,8 @@ package middleware
 
 import (
 	"net/http"
+	"os"
+	"fmt"
 
 	"github.com/labstack/echo"
 )
@@ -9,11 +11,12 @@ import (
 func CORSMiddleware() echo.MiddlewareFunc {
 	return func(next echo.HandlerFunc) echo.HandlerFunc {
 		return func(c echo.Context) error {
+
+			reactPort := os.Getenv("REACT_PORT")
 			// 許可するオリジン
 			allowedOrigins := []string{
-				"http://localhost:3000",
-				"http://0.0.0.0:3000",
-				"http://localhost:5173",
+				fmt.Sprintf("http://0.0.0.0:%s", reactPort),
+            	fmt.Sprintf("http://localhost:%s", reactPort),
 			}
 			req := c.Request()
 			res := c.Response()
