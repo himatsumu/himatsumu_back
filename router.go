@@ -84,11 +84,8 @@ func InitServer() *echo.Echo {
 		//アルバム
 		albumGroup := authGroup.Group("/album")
 		{
-			_=albumGroup
+			albumGroup.POST("/folder",controllers.RegisterFolder) // http://localhost:8888/auth/album/folder
 		}
-
-
-
 	}
 
 	return server
