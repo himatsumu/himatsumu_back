@@ -14,7 +14,7 @@ jobs:
             contents: read
             packages: write
         outputs:
-            IMAGE_NAME: ${{ steps.build-image.outputs.image-name }}
+            IMAGE_NAME: ${{ steps.prepare_name.outputs.IMAGE_NAME }}
 
         steps:
             - name: Checkout repository
@@ -40,3 +40,15 @@ jobs:
                   tags: |
                       ${{ env.REGISTRY }}/${{ steps.prepare_name.outputs.IMAGE_NAME }}:latest
                       ${{ env.REGISTRY }}/${{ steps.prepare_name.outputs.IMAGE_NAME }}:${{ github.sha }}
+
+    deploy:
+        needs: build-and-push
+
+        runs-on: self-hosted
+
+        steps:
+        # ステップ1: Kubernetesにデプロイ
+        - name: Deploy to Kubernetes
+          run: |
+              kubectl set image deployment/backend-deployment backend-container=${{ env.REGISTRY }}/${{ needs.build-and-push.outputs.IMAGE_NAME }}:${{ github.sha }}
+              kubectl rollout status deployment/backend-deployment
