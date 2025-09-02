@@ -12,7 +12,6 @@ func Init() {
 	err := godotenv.Overload(".env")
 	if err != nil {
 		fmt.Println("Error loading .env file:", err)
-		os.Exit(1)
 	}
 	fmt.Println(os.Getenv("GO_URL"))
 }
