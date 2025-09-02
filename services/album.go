@@ -7,11 +7,10 @@ import (
 	"os"
 )
 
-
+//写真フォルダを作る
 func CreateFolder(friendUUID string,date string) Result{
 	//uuid生成
 	uid, err := utils.Genid()
-	
 	if err != nil  {
 		return Result{
 			Message: FolderNotRegistration,
@@ -20,6 +19,7 @@ func CreateFolder(friendUUID string,date string) Result{
 		}
 	}
 
+	//フォルダを作る
 	models.CreateFolder(friendUUID,date)
 	
 	folderPath := os.Getenv("UPLORD_PATH") + uid
@@ -41,6 +41,34 @@ func CreateFolder(friendUUID string,date string) Result{
 	}
 }
 
-func UplordImg() {
-	
+//画像をアップロードする関数
+func UplordImg(folderUid string,images string) Result{
+	//uuid生成
+	uid,err := utils.Genid()
+	if err != nil {
+		return Result{
+			Message: FolderNotRegistration,
+			Status:  http.StatusInternalServerError,
+			Data:    nil,
+		}
+	}
+
+	imgUrl := folderUid + ".png"
+
+
+    fout, err := os.Create(imgUrl)        
+	if err != nil {
+        return Result{
+        	Message: FolderNotRegistration,
+        	Status:  http.StatusInternalServerError,
+        	Data:    nil,
+        }
+    }
+	defer fout.Close()
+
+	return Result{
+		Message: "",
+		Status:  http.StatusOK,
+		Data:    uid,
+	}
 }
