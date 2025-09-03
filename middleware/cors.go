@@ -13,10 +13,12 @@ func CORSMiddleware() echo.MiddlewareFunc {
 		return func(c echo.Context) error {
 
 			reactPort := os.Getenv("REACT_PORT")
+			reactUrl := os.Getenv("REACT_URL")
 			// 許可するオリジン
 			allowedOrigins := []string{
 				fmt.Sprintf("http://0.0.0.0:%s", reactPort),
             	fmt.Sprintf("http://localhost:%s", reactPort),
+				reactUrl,
 			}
 			req := c.Request()
 			res := c.Response()
