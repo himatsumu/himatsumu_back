@@ -54,6 +54,7 @@ func autoMigrate() error {
 		&OwnCostume{},
 		&QuestHistory{},
 		&QuestCheck{},
+		&Albums{},
 	}
 
 	// 既存のテーブルを削除

@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"app/services"
+	"log"
 	"net/http"
 
 	"github.com/labstack/echo"
@@ -13,6 +14,7 @@ type RegisterFolderBody struct {
 	Date  		string `json:"Date"`
 }
 
+//フォルダーを作成
 func RegisterFolder(ctx echo.Context) error {
 	var body RegisterFolderBody
 
@@ -28,4 +30,52 @@ func RegisterFolder(ctx echo.Context) error {
 	result := services.CreateFolder(body.FriendUUId, body.Date)
 
 	return ctx.JSON(result.Status, result)
+}
+
+type Data struct {
+	FriendUUId string `json:"FriendUUId"`
+	Date        string `json:"Date"`
+}
+
+//写真を保存
+func UplodImg(ctx echo.Context) error {
+	// ファイルを取得
+    file, err := ctx.FormFile("image")
+    if err != nil {
+		log.Println(err)
+        return ctx.JSON(http.StatusBadRequest, echo.Map{
+			"status":  http.StatusBadRequest,
+			"message": services.InvalidRequestFormat,
+		})
+    }
+	var body Data
+
+	if err := ctx.Bind(&body); err != nil {
+		return ctx.JSON(http.StatusBadRequest, echo.Map{
+			"status":  http.StatusBadRequest,
+			"message": services.InvalidRequestFormat,
+		})
+	}
+
+	// サービスを呼び出す
+	result := services.UplordImg(body.FriendUUId,body.Date,file)
+
+	return ctx.JSON(result.Status, result)
+}
+
+
+//アルバム取得
+func GetAlbums(ctx echo.Context) error {
+	// URLパラメータからフォルダ名を取得
+	uuid := ctx.Request().Header.Get("friend_uuid")
+
+
+	result := services.GetAlbums(uuid)
+	// エラー処理
+	if result.Status != 200 {
+		return ctx.JSON(result.Status, result)
+	}
+
+	// 正常に取得できた場合は、200ステータスと共にファイル情報をJSON形式で返す
+	return ctx.JSON(http.StatusOK, result)
 }

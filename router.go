@@ -83,8 +83,13 @@ func InitServer() *echo.Echo {
 
 		//アルバム
 		albumGroup := authGroup.Group("/album")
-		{
+		{	
+			//指定した日付のフォルダを作る関数(frienduuidのフォルダがなければ同時に作る)
 			albumGroup.POST("/folder",controllers.RegisterFolder) // http://localhost:8888/auth/album/folder
+			//画像のアップロード
+			albumGroup.POST("/uplod",controllers.UplodImg)// http://localhost:8888/auth/album/uplod
+
+			albumGroup.GET("/",controllers.GetAlbums)// http://localhost:8888/auth/album/
 		}
 	}
 

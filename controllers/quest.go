@@ -35,6 +35,7 @@ func GenerateQuests(ctx echo.Context) error {
 func CreateQuest(ctx echo.Context) error {
 	// リクエストからクエリパラメータを取得
 	userUuid := ctx.Get("user_uuid").(string)
+	
 	req := new(models.CreateQuestRequest)
 	err := ctx.Bind(req)
 
