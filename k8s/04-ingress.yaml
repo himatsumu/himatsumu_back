@@ -3,6 +3,7 @@ kind: Ingress
 metadata:
   name: backend-ingress
 spec:
+  ingressClassName: nginx
   rules:
     - host: api-himatsumu.kirimaru.org
       http:
