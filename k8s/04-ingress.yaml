@@ -4,7 +4,7 @@ metadata:
   name: backend-ingress
 spec:
   rules:
-    - host: api.himatsumu.kirimaru.org
+    - host: api-himatsumu.kirimaru.org
       http:
         paths:
           - path: /
