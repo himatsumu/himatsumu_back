@@ -28,6 +28,7 @@ func CreateFolder(friendUUID string, date string) Result {
 			Data:    nil,
 		}
 	}
+	_=uid
 
 	folderPath := os.Getenv("ALBUM_PATH") + friendUUID
 
