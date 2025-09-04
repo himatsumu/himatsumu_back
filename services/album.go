@@ -17,11 +17,11 @@ import (
 	"time"
 )
 
-//写真フォルダを作る
-func CreateFolder(friendUUID string,date string) Result{
+// 写真フォルダを作る
+func CreateFolder(friendUUID string, date string) Result {
 	//uuid生成
 	uid, err := utils.Genid()
-	if err != nil  {
+	if err != nil {
 		return Result{
 			Message: FolderNotRegistration,
 			Status:  http.StatusInternalServerError,
@@ -29,11 +29,11 @@ func CreateFolder(friendUUID string,date string) Result{
 		}
 	}
 
-	folderPath := os.Getenv("UPLORD_PATH") + friendUUID
+	folderPath := os.Getenv("ALBUM_PATH") + friendUUID
 
-    // 親フォルダがなければ作成）
-    err = os.MkdirAll(folderPath, 0755) // 0755はパーミッション
-    if err != nil {
+	// 親フォルダがなければ作成）
+	err = os.MkdirAll(folderPath, 0755) // 0755はパーミッション
+	if err != nil {
 		return Result{
 			Message: FolderNotRegistration,
 			Status:  http.StatusInternalServerError,
@@ -42,7 +42,7 @@ func CreateFolder(friendUUID string,date string) Result{
 	}
 
 	//フォルダを作る
-	err = models.CreateFolder(friendUUID,date)
+	err = models.CreateFolder(friendUUID, date)
 	if err != nil {
 		return Result{
 			Message: FolderNotRegistration,
@@ -51,18 +51,18 @@ func CreateFolder(friendUUID string,date string) Result{
 		}
 	}
 
-	folderPath = folderPath + "/"+ date
+	folderPath = folderPath + "/" + date
 
 	// 日付フォルダを作成
-    err = os.MkdirAll(folderPath, 0755) // 0755はパーミッション
-    if err != nil {
+	err = os.MkdirAll(folderPath, 0755) // 0755はパーミッション
+	if err != nil {
 		return Result{
 			Message: FolderNotRegistration,
 			Status:  http.StatusInternalServerError,
 			Data:    nil,
 		}
 	}
-	
+
 	return Result{
 		Message: "",
 		Status:  http.StatusOK,
@@ -70,10 +70,10 @@ func CreateFolder(friendUUID string,date string) Result{
 	}
 }
 
-//画像をアップロードする関数
-func UplordImg(friendUUID string,date string,file *multipart.FileHeader) Result{
+// 画像をアップロードする関数
+func UplordImg(friendUUID string, date string, file *multipart.FileHeader) Result {
 	//uuid生成
-	uid,err := utils.Genid()
+	uid, err := utils.Genid()
 	if err != nil {
 		return Result{
 			Message: FolderNotRegistration,
@@ -81,7 +81,7 @@ func UplordImg(friendUUID string,date string,file *multipart.FileHeader) Result{
 			Data:    nil,
 		}
 	}
-	folderPath := os.Getenv("UPLORD_PATH") + friendUUID
+	folderPath := os.Getenv("ALBUM_PATH") + friendUUID
 
 	imgUrl := folderPath + "/" + date + "/" + uid + ".png"
 
@@ -89,10 +89,10 @@ func UplordImg(friendUUID string,date string,file *multipart.FileHeader) Result{
 	if err := saveImage(file, imgUrl); err != nil {
 		log.Print(err)
 		return Result{
-        	Message: FolderNotRegistration,
-        	Status:  http.StatusInternalServerError,
-        	Data:    nil,
-        } 
+			Message: FolderNotRegistration,
+			Status:  http.StatusInternalServerError,
+			Data:    nil,
+		}
 	}
 
 	return Result{
@@ -146,9 +146,10 @@ type AlbumData struct {
 	Date  string     `json:"date"`  // 日付（YYYY-MM-DD形式）
 	Album []FileInfo `json:"album"` // その日のファイル一覧
 }
-//アルバム取得
+
+// アルバム取得
 func GetAlbums(uuid string) Result {
-	folderPath := os.Getenv("UPLORD_PATH") + uuid
+	folderPath := os.Getenv("ALBUM_PATH") + uuid
 	// 日付をキーとするマップでファイルをグループ化
 	albumMap := make(map[string][]FileInfo)
 
@@ -166,14 +167,14 @@ func GetAlbums(uuid string) Result {
 	// 各日付フォルダを処理
 	for _, entry := range entries {
 		entryName := entry.Name()
-		
+
 		if entry.IsDir() {
 			// 日付形式かどうかの確認（YYYY-MM-DD形式）
 			isDateFormat := len(entryName) == 10 && strings.Count(entryName, "-") == 2
-			
+
 			if isDateFormat {
 				dateFolderPath := filepath.Join(folderPath, entryName)
-				
+
 				// 日付フォルダ内のファイルを読み込み
 				dateFiles, err := os.ReadDir(dateFolderPath)
 				if err != nil {
@@ -189,13 +190,13 @@ func GetAlbums(uuid string) Result {
 						files = append(files, FileInfo{
 							Name: file.Name(),
 						})
-					} 
+					}
 				}
-				
+
 				// ファイルがなくても日付フォルダとして追加
 				albumMap[entryName] = files
-			} 
-		} 
+			}
+		}
 	}
 
 	// マップをスライスに変換し、日付順でソート
