@@ -2,6 +2,7 @@ package models
 
 import (
 	"time"
+
 	"github.com/lib/pq"
 )
 
@@ -29,7 +30,7 @@ type Friend struct {
 	OwnChars    []OwnCharacter `gorm:"foreignKey:FriendUUID;references:FriendUUID"`
 	OwnCostumes []OwnCostume   `gorm:"foreignKey:FriendUUID;references:FriendUUID"`
 	QuestHis    []QuestHistory `gorm:"foreignKey:FriendUUID;references:FriendUUID"`
-	MeetHis     []MeetHistory  `gorm:"foreignKey:FriendUUID;references:FriendUUID"`
+	Albums		[]Albums	   `gorm:"foreignKey:FriendUUID;references:FriendUUID"`
 	User1       User           `gorm:"foreignKey:UserUUID1;references:UserUUID"`
 	User2       User           `gorm:"foreignKey:UserUUID2;references:UserUUID"`
 }
@@ -122,21 +123,13 @@ type QuestCheck struct {
     CreateAt   time.Time `gorm:"column:create_at;type:timestamp;not null"`            // 達成日時
 }
 
-// MeetHistory 遊んだ日履歴テーブル
-type MeetHistory struct {
-	MeetUUID   string    `gorm:"primaryKey;column:MEET_UUID;type:CHAR(36);not null"`
-	FriendUUID string    `gorm:"column:FRIEND_UUID;type:CHAR(36);not null"`
-	MeetAt     time.Time `gorm:"column:MEET_AT;type:DATE;not null"`
-	Pictures   []Picture `gorm:"foreignKey:MeetUUID;references:MeetUUID"`
-}
-
 // Picture 写真テーブル
-type Picture struct {
-	PicUUID  string    `gorm:"primaryKey;column:PIC_UUID;type:CHAR(36);not null"`
-	MeetUUID string    `gorm:"column:MEET_UUID;type:CHAR(36);not null"`
-	PicURL   string    `gorm:"column:PIC_URL;type:VARCHAR(50);not null"`
-	CreateAt time.Time `gorm:"column:CREATE_AT;type:timestamp;not null"`
-}
+type Albums struct {
+	AlbumUUID  string  `gorm:"primaryKey;column:ALBUM_UUID;type:CHAR(36);not null"`
+	FriendUUID string    `gorm:"column:FRIEND_UUID;type:CHAR(36);not null"`
+	AlbumName  string  `gorm:"column:ALBUM_Name;type:VARCHAR(36);not null"`
+	AlbumDate  string `gorm:"column:ALBUM_Date;type:VARCHAR(10);not null"` // YYYY-MM-DD形式
+}	
 
 //ここまでデータベース
 

@@ -23,7 +23,6 @@ func FriendRecord(Sender_id string,Receiver_id string)(string,error){
 		OwnChars:    []OwnCharacter{},
 		OwnCostumes: []OwnCostume{},
 		QuestHis:    []QuestHistory{},
-		MeetHis:     []MeetHistory{},
 	}
 
 	//データベースに書き込む

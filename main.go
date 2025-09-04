@@ -21,6 +21,7 @@ func main() {
 	// モデル初期化
 	err := models.Init()
 	log.Println("err", err)
+
 	// サーバー起動
 	mainServer()
 	// DebugModel()

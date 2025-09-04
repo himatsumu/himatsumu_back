@@ -41,14 +41,14 @@ func GetRequest(ctx echo.Context) error {
 }
 
 // リクエストボディの構造体
-type RegisterBody struct {
+type RegisterFriendBody struct {
 	RequestId  string `json:"RequestId"`
 	SenderId   string `json:"SenderId"`
 	ReceiverId string `json:"ReceiverId"`
 }
 
 func RegisterFriend(ctx echo.Context) error {
-	var body RegisterBody
+	var body RegisterFriendBody
 
 	err := ctx.Bind(&body)
 	if err != nil {

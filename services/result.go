@@ -25,6 +25,7 @@ const (
 	Incorrectrequesterror    = "フレンドリクエストが無効です"
 	UserMismatchExisting     = "ユーザーが一致していません"
 	CharacterNotRegistration = "キャラクターを生成できませんでした"
+	FolderNotRegistration	 = "フォルダーを作成できませんでした"
 	CouldNotGenerateName     = "名前を生成できませんでした"
 	QuestNotCompleted        = "クエストを達成できていません"
 	EmptyUUID                = "UUIDが空です"
@@ -35,6 +36,7 @@ const (
 	NotRecommendQuest        = "クエスト生成中にエラーが発生しました"
 	NotFriend                = "フレンドではないユーザーです"
 	QuestNotFound            = "クエストが見つかりませんでした"
+
 
 	InvalidRequestFormat = "リクエストの形式が不正です"
 )

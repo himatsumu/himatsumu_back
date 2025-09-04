@@ -54,8 +54,7 @@ func autoMigrate() error {
 		&OwnCostume{},
 		&QuestHistory{},
 		&QuestCheck{},
-		&MeetHistory{},
-		&Picture{},
+		&Albums{},
 	}
 
 	// 既存のテーブルを削除
@@ -156,13 +155,6 @@ func Seed(db *gorm.DB) error {
 		{QuestUUID: questUUID1, UserUUID: userUUID1, FriendUUID: friendUUID1, CreateAt: time.Now()},
 	}
 
-	meetHistoryTestData := []MeetHistory{
-		{MeetUUID: meetUUID1, FriendUUID: friendUUID1, MeetAt: time.Now().AddDate(0, 0, -7)},
-	}
-
-	pictureTestData := []Picture{
-		{PicUUID: picUUID1, MeetUUID: meetUUID1, PicURL: "/images/pictures/meetup_photo_1.jpg", CreateAt: time.Now().AddDate(0, 0, -7)},
-	}
 	
 	// マスターデータ
 	if err := db.Clauses(clause.OnConflict{DoNothing: true}).Create(&charaTypeTestData).Error; err != nil { return err }
@@ -181,11 +173,9 @@ func Seed(db *gorm.DB) error {
 
 	// 履歴データ
 	if err := db.Clauses(clause.OnConflict{DoNothing: true}).Create(&questHistoryTestData).Error; err != nil { return err }
-	if err := db.Clauses(clause.OnConflict{DoNothing: true}).Create(&meetHistoryTestData).Error; err != nil { return err }
 
 	// 履歴に紐づくデータ
 	if err := db.Clauses(clause.OnConflict{DoNothing: true}).Create(&questCheckTestData).Error; err != nil { return err }
-	if err := db.Clauses(clause.OnConflict{DoNothing: true}).Create(&pictureTestData).Error; err != nil { return err }
 
 	fmt.Println("Seeding completed successfully.")
 	return nil
