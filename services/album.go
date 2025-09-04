@@ -66,7 +66,7 @@ func CreateFolder(friendUUID string, date string) Result {
 	return Result{
 		Message: "",
 		Status:  http.StatusOK,
-		Data:    uid,
+		Data:    nil,
 	}
 }
 
@@ -98,7 +98,7 @@ func UplordImg(friendUUID string, date string, file *multipart.FileHeader) Resul
 	return Result{
 		Message: "",
 		Status:  http.StatusOK,
-		Data:    uid,
+		Data:    nil,
 	}
 }
 
