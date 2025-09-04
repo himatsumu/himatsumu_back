@@ -149,7 +149,6 @@ type AlbumData struct {
 //アルバム取得
 func GetAlbums(uuid string) Result {
 	folderPath := os.Getenv("UPLORD_PATH") + uuid
-
 	// 日付をキーとするマップでファイルをグループ化
 	albumMap := make(map[string][]FileInfo)
 

@@ -63,14 +63,23 @@ func UplodImg(ctx echo.Context) error {
 	return ctx.JSON(result.Status, result)
 }
 
+type AlbumBody struct {
+    FriendUUID string `json:"friend_uuid"`
+}
+
 
 //アルバム取得
 func GetAlbums(ctx echo.Context) error {
-	// URLパラメータからフォルダ名を取得
-	uuid := ctx.Request().Header.Get("friend_uuid")
+	var body AlbumBody
 
+	if err := ctx.Bind(&body); err != nil {
+		return ctx.JSON(http.StatusBadRequest, echo.Map{
+			"status":  http.StatusBadRequest,
+			"message": services.InvalidRequestFormat,
+		})
+	}
 
-	result := services.GetAlbums(uuid)
+	result := services.GetAlbums(body.FriendUUID)
 	// エラー処理
 	if result.Status != 200 {
 		return ctx.JSON(result.Status, result)
